@@ -27,7 +27,11 @@ openApiGenerate {
     apiPackage.set("$openapiGroup.api")
     modelPackage.set("$openapiGroup.models")
     invokerPackage.set("$openapiGroup.invoker")
-    inputSpec.set("$rootDir/specs/specs-meaning-v1.yaml")
+    inputSpec.set(
+        layout.projectDirectory
+            .file("/src/main/resources/specs-meaning-v1.yaml")
+            .asFile.absolutePath
+    )
 
     globalProperties.apply {
         put("models", "")
