@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">?attr/navBarBackgroundColor</item>
+        <item name="itemTextColor">?attr/navBarContentColor</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.BottomNavigationView</item>
+        <item name="itemIconTint">?attr/navBarContentColor</item>
+        <item name="itemIconSize">32dp</item>
+        <item name="itemActiveIndicatorStyle">@style/BottomNavigationView.ActiveIndicator</item>
+    </style>
+    <style name="TextAppearance.BottomNavigationView" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+    <style name="BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/navBarActiveIndicatorColor</item>
+    </style>
+
+</resources>
