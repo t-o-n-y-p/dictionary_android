@@ -15,7 +15,7 @@
         app:hideNavigationIcon="true"
         app:autoShowKeyboard="false">
 
-        <include android:id="@+id/search_results_content" layout="@layout/recycler_view_words"/>
+        <include android:id="@+id/search_view_content" layout="@layout/search_view_content"/>
 
     </com.google.android.material.search.SearchView>
 

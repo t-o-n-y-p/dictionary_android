@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/genericBackgroundColor">
+
+    <include android:id="@+id/search_results_loading" layout="@layout/loading"/>
+    <include android:id="@+id/search_results_content" layout="@layout/recycler_view_words"/>
+    <include android:id="@+id/search_results_error" layout="@layout/error"/>
+    <include android:id="@+id/search_invitation" layout="@layout/search_invitation"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

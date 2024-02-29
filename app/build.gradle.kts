@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.coroutines.android)
     implementation(libs.okhttp3)
     implementation(libs.retrofit)
+    implementation(libs.uuid)
+    implementation(libs.navigation.fragment)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
