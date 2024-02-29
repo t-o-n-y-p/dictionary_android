@@ -3,4 +3,8 @@
     <attr name="navBarBackgroundColor" format="color"/>
     <attr name="navBarContentColor" format="color"/>
     <attr name="navBarActiveIndicatorColor" format="color"/>
+    <attr name="searchViewToolbarBackgroundColor" format="color"/>
+    <attr name="searchViewToolbarContentColor" format="color"/>
+
+    <attr name="contentColor" format="color"/>
 </resources>

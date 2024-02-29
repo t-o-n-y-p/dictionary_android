@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "dictionary"
 include(":app")
- 
+include(":dictionary-api-v1")

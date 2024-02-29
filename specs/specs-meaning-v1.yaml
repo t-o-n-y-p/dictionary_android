@@ -1,0 +1,425 @@
+openapi: 3.0.4
+info:
+  title: Dictionary
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: meaning
+    description: Значение слова
+paths:
+  /meaning/create:
+    post:
+      tags:
+        - meaning
+      summary: Create meaning
+      operationId: meaningCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeaningCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeaningCreateResponse'
+  /meaning/read:
+    post:
+      tags:
+        - meaning
+      summary: Read meaning
+      operationId: meaningRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeaningReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeaningReadResponse'
+  /meaning/update:
+    post:
+      tags:
+        - meaning
+      summary: Update meaning
+      operationId: meaningUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeaningUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeaningUpdateResponse'
+  /meaning/delete:
+    post:
+      tags:
+        - meaning
+      summary: Delete meaning
+      operationId: meaningDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeaningDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeaningDeleteResponse'
+  /meaning/search:
+    post:
+      tags:
+        - meaning
+      summary: Search meaning
+      operationId: meaningSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeaningSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeaningSearchResponse'
+
+components:
+  schemas:
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/MeaningCreateRequest'
+          read:   '#/components/schemas/MeaningReadRequest'
+          update: '#/components/schemas/MeaningUpdateRequest'
+          delete: '#/components/schemas/MeaningDeleteRequest'
+          search: '#/components/schemas/MeaningSearchRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/MeaningCreateResponse'
+          read:   '#/components/schemas/MeaningReadResponse'
+          update: '#/components/schemas/MeaningUpdateResponse'
+          delete: '#/components/schemas/MeaningDeleteResponse'
+          search: '#/components/schemas/MeaningSearchResponse'
+          init: '#/components/schemas/MeaningInitResponse'
+
+    MeaningWebSocketParams:
+      properties:
+        webSocketExtensions:
+          type: array
+          description: Расширения WebSocket, применяемые в сессии
+          items:
+            $ref: '#/components/schemas/MeaningWebSocketExtension'
+
+    MeaningWebSocketExtension:
+      type: string
+      description: Расширения WebSocket, применяемые в сессии
+      enum:
+        - deflate
+
+    MeaningId:
+      type: string
+      description: Идентификатор объекта значения
+
+    MeaningVersion:
+      type: string
+      description: Версия оптимистичной блокировки
+
+    BaseCreateMeaning:
+      type: object
+      properties:
+        word:
+          type: string
+          description: Слово
+        value:
+          type: string
+          description: Значение
+        proposedBy:
+          type: string
+          description: Имя предложившего пользователя
+
+    BaseUpdateMeaning:
+      type: object
+      properties:
+        approved:
+          type: boolean
+          description: Флаг подтверждения
+
+    BaseFullMeaning:
+      allOf:
+        - $ref: '#/components/schemas/BaseCreateMeaning'
+        - $ref: '#/components/schemas/BaseUpdateMeaning'
+
+    MeaningCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseCreateMeaning'
+
+    MeaningCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/MeaningRequestDebug'
+        - type: object
+          properties:
+            meaning:
+              $ref: '#/components/schemas/MeaningCreateObject'
+
+    MeaningReadObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/MeaningId'
+
+    MeaningReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/MeaningRequestDebug'
+        - type: object
+          properties:
+            meaning:
+              $ref: '#/components/schemas/MeaningReadObject'
+
+    MeaningUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseUpdateMeaning'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/MeaningId'
+            version:
+              $ref: '#/components/schemas/MeaningVersion'
+
+    MeaningUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/MeaningRequestDebug'
+        - type: object
+          properties:
+            meaning:
+              $ref: '#/components/schemas/MeaningUpdateObject'
+
+    MeaningDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/MeaningId'
+            version:
+              $ref: '#/components/schemas/MeaningVersion'
+
+    MeaningDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/MeaningRequestDebug'
+        - type: object
+          properties:
+            meaning:
+              $ref: '#/components/schemas/MeaningDeleteObject'
+
+    MeaningSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        word:
+          type: string
+          description: Слово, по которому будем искать
+        mode:
+          $ref: '#/components/schemas/MeaningSearchFilterMode'
+        approved:
+          type: boolean
+          description: Будем искать подтвержденные или нет
+
+    MeaningSearchFilterMode:
+      type: string
+      description: Дополнительный режим поиска значения
+      enum:
+        - startsWith
+        - contains
+
+    MeaningSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/MeaningRequestDebug'
+        - type: object
+          properties:
+            meaningFilter:
+              $ref: '#/components/schemas/MeaningSearchFilter'
+
+    MeaningResponseDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/MeaningId'
+
+    MeaningResponseFullObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseFullMeaning'
+        - $ref: '#/components/schemas/MeaningResponseDeleteObject'
+        - type: object
+          properties:
+            version:
+              $ref: '#/components/schemas/MeaningVersion'
+
+    MeaningResponseDeleteSingle:
+      allOf:
+        - type: object
+          description: Ответ только с идентификатором объекта значения
+          properties:
+            meaning:
+              $ref: '#/components/schemas/MeaningResponseDeleteObject'
+
+    MeaningResponseFullSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом значения
+          properties:
+            meaning:
+              $ref: '#/components/schemas/MeaningResponseFullObject'
+
+    MeaningResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных значений
+          properties:
+            meanings:
+              type: array
+              items:
+                $ref: '#/components/schemas/MeaningResponseFullObject'
+
+    MeaningCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningResponseFullSingle'
+
+    MeaningReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningResponseFullSingle'
+
+    MeaningUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningResponseFullSingle'
+
+    MeaningDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningResponseDeleteSingle'
+
+    MeaningSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningResponseMulti'
+
+    MeaningInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningWebSocketParams'
+
+    # STUBS ======================
+    MeaningRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    MeaningRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/MeaningDebug'
+
+    MeaningDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/MeaningRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/MeaningRequestDebugStubs'
+
+    MeaningRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - cannotCreate
+        - cannotRead
+        - cannotUpdate
+        - cannotDelete
+        - cannotSearch

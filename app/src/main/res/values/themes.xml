@@ -5,5 +5,9 @@
         <item name="navBarBackgroundColor">@color/grey_background</item>
         <item name="navBarContentColor">@color/grey_primary</item>
         <item name="navBarActiveIndicatorColor">@color/grey_secondary</item>
+        <item name="searchViewToolbarBackgroundColor">@color/grey_background</item>
+        <item name="searchViewToolbarContentColor">@color/grey_primary</item>
+
+        <item name="contentColor">@color/grey_primary</item>
     </style>
 </resources>
