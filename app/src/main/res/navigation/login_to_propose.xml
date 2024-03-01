@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_to_propose"
+    app:startDestination="@id/login_form">
+
+    <fragment
+        android:id="@+id/login_form"
+        android:name="com.tonyp.dictionary.fragment.login.LoginFragment"
+        tools:layout="@layout/fragment_login">
+    </fragment>
+
+</navigation>

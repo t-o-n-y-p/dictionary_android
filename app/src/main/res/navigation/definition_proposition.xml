@@ -9,6 +9,11 @@
         android:id="@+id/word_definition"
         android:name="com.tonyp.dictionary.fragment.definition.WordDefinitionFragment"
         tools:layout="@layout/fragment_word_definition">
+        <action
+            android:id="@+id/go_to_login"
+            app:destination="@id/login_to_propose"/>
     </fragment>
+
+    <include app:graph="@navigation/login_to_propose"/>
 
 </navigation>

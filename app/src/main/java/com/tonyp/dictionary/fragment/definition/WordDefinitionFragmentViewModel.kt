@@ -2,46 +2,98 @@ package com.tonyp.dictionary.fragment.definition
 
 import android.content.SharedPreferences
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
+import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionBinding
+import com.tonyp.dictionary.fragment.search.SearchFragmentViewModel
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.models.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class WordDefinitionFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
+    private val useCase: WordDefinitionFragmentUseCase,
     private val cache: WizardCache
 ) : ViewModel() {
 
+    private val mDefinitionState = MutableLiveData<DefinitionState>(DefinitionState.Loading)
+    val definitionState: LiveData<DefinitionState> get() = mDefinitionState
+
     fun fillDataFromCache(binding: FragmentWordDefinitionBinding) {
-        binding.wordText.text = cache.currentlySelectedWord
-        binding.definitionText.text =
+        binding.wordDefinitionContent.wordText.text = cache.currentlySelectedWord
+        cache.currentlySelectedSearchResults
+            .takeIf { it.isEmpty() }
+            ?.let { loadDefinitionToCache(binding) }
+            ?: let {
+                fillDefinitionText(binding)
+                mDefinitionState.value = DefinitionState.Content
+            }
+        val userPreferences = securePreferences.get<UserPreferences>()
+        when {
+            userPreferences == null || userPreferences.accessToken.isBlank() -> {
+                binding.wordDefinitionContent.logInToAddButton.isVisible = true
+                binding.wordDefinitionContent.addButton.isVisible = false
+            }
+            userPreferences.roles.contains(UserRole.BANNED) -> {
+                binding.wordDefinitionContent.logInToAddButton.isVisible = false
+                binding.wordDefinitionContent.addButton.isVisible = false
+            }
+            else -> {
+                binding.wordDefinitionContent.logInToAddButton.isVisible = false
+                binding.wordDefinitionContent.addButton.isVisible = true
+            }
+        }
+    }
+
+    private fun fillDefinitionText(binding: FragmentWordDefinitionBinding) {
+        binding.wordDefinitionContent.definitionText.text =
             cache.currentlySelectedSearchResults
                 .takeIf { it.size == 1 }
                 ?.let { it[0].value }
                 ?: cache.currentlySelectedSearchResults
                     .mapIndexed { i, e -> "${i + 1}. ${e.value}" }
                     .joinToString(separator = "\n")
-        val userPreferences = securePreferences.get<UserPreferences>() ?: UserPreferences()
-        when {
-            userPreferences.accessToken.isBlank() -> {
-                binding.logInToAddButton.isVisible = true
-                binding.addButton.isVisible = false
-            }
-            userPreferences.roles.contains(UserRole.BANNED) -> {
-                binding.logInToAddButton.isVisible = false
-                binding.addButton.isVisible = false
-            }
-            else -> {
-                binding.logInToAddButton.isVisible = false
-                binding.addButton.isVisible = true
+    }
+
+    private fun loadDefinitionToCache(binding: FragmentWordDefinitionBinding) {
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) { useCase.search(cache.currentlySelectedWord) }
+                    .getOrNull()
+                    ?.takeIf { it.result == ResponseResult.SUCCESS }
+                    ?.let {
+                        val meaningObjects = it.meanings ?: emptyList()
+                        cache.currentlySelectedSearchResults = meaningObjects
+                        fillDefinitionText(binding)
+                        mDefinitionState.value = DefinitionState.Content
+                    }
+                    ?: let {
+                        mDefinitionState.value = DefinitionState.Error
+                    }
+            } catch (t: Throwable) {
+                mDefinitionState.value = DefinitionState.Error
             }
         }
+    }
+
+    sealed class DefinitionState {
+
+        data object Loading: DefinitionState()
+
+        data object Content: DefinitionState()
+
+        data object Error: DefinitionState()
     }
 
 }

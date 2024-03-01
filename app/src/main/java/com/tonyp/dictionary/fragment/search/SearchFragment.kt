@@ -25,7 +25,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             viewModel.saveSearchItemToCache(it)
             WordDefinitionBottomSheetDialogFragment().show(
                 parentFragmentManager,
-                WordDefinitionBottomSheetDialogFragment.TAG)
+                WordDefinitionBottomSheetDialogFragment::class.simpleName)
         }
     )
 

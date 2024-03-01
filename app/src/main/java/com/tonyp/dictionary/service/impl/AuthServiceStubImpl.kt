@@ -13,8 +13,8 @@ class AuthServiceStubImpl : AuthService {
             TokenResponse(
                 accessToken = username + password,
                 refreshToken = username + password,
-                expiresIn = Long.MAX_VALUE,
-                refreshExpiresIn = Long.MAX_VALUE
+                expiresIn = Int.MAX_VALUE,
+                refreshExpiresIn = Int.MAX_VALUE
             )
         )
 
@@ -23,8 +23,8 @@ class AuthServiceStubImpl : AuthService {
             TokenResponse(
                 accessToken = refreshToken,
                 refreshToken = refreshToken,
-                expiresIn = Long.MAX_VALUE,
-                refreshExpiresIn = Long.MAX_VALUE
+                expiresIn = Int.MAX_VALUE,
+                refreshExpiresIn = Int.MAX_VALUE
             )
         )
 

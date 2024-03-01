@@ -16,11 +16,11 @@ object UserPreferencesMapper {
         startTime: Instant
     ): UserPreferences {
         return UserPreferences(
-            accessToken = tokenResponse.accessToken,
-            refreshToken = tokenResponse.refreshToken,
-            accessTokenExpirationDate = startTime + tokenResponse.expiresIn.seconds,
-            refreshTokenExpirationDateTime = startTime + tokenResponse.refreshExpiresIn.seconds,
-            roles = map(userInfoResponse.groups)
+            accessToken = tokenResponse.accessToken ?: "",
+            refreshToken = tokenResponse.refreshToken ?: "",
+            accessTokenExpirationDate = startTime + (tokenResponse.expiresIn ?: 0).seconds,
+            refreshTokenExpirationDateTime = startTime + (tokenResponse.refreshExpiresIn ?: 0).seconds,
+            roles = map(userInfoResponse.groups ?: emptyList())
         )
     }
 

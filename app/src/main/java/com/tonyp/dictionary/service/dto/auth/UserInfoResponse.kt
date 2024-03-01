@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserInfoResponse(
-    val groups: List<UserGroup>
+    val groups: List<UserGroup>?
 )

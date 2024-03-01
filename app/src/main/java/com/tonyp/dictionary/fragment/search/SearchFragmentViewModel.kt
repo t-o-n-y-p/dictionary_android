@@ -40,15 +40,17 @@ class SearchFragmentViewModel @Inject constructor(
                     mSearchResultState.value = SearchResultState.Loading
                     try {
                         withContext(Dispatchers.IO) { useCase.search(input) }
-                            .takeIf { it.isSuccess && it.getOrNull()?.result == ResponseResult.SUCCESS }
+                            .getOrNull()
+                            ?.takeIf { it.result == ResponseResult.SUCCESS }
                             ?.let {
-                                val meaningObjects = it.getOrNull()?.meanings ?: emptyList()
+                                val meaningObjects = it.meanings ?: emptyList()
                                 cache.searchResults = meaningObjects
                                 mContentState.value = meaningObjects
                                 mSearchResultState.value = SearchResultState.Content
-                            } ?: let {
-                            mSearchResultState.value = SearchResultState.Error
-                        }
+                            }
+                            ?: let {
+                                mSearchResultState.value = SearchResultState.Error
+                            }
                     } catch (t: Throwable) {
                         mSearchResultState.value = SearchResultState.Error
                     }

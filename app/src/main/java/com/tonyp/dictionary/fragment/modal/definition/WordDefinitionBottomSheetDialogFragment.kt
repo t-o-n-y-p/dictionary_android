@@ -24,8 +24,4 @@ class WordDefinitionBottomSheetDialogFragment :
         binding = FragmentWordDefinitionBottomSheetDialogBinding.inflate(inflater)
         return binding.root
     }
-
-    companion object {
-        const val TAG = "WordDefinitionBottomSheetDialogFragment"
-    }
 }
