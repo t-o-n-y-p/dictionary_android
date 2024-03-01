@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="android:background">?attr/navBarBackgroundColor</item>
-        <item name="itemTextColor">?attr/navBarContentColor</item>
+        <item name="android:background">?attr/dictionaryTintColor</item>
+        <item name="itemTextColor">?attr/dictionaryContentColor</item>
         <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView</item>
         <item name="itemTextAppearanceInactive">@style/TextAppearance.BottomNavigationView</item>
-        <item name="itemIconTint">?attr/navBarContentColor</item>
+        <item name="itemIconTint">?attr/dictionaryContentColor</item>
         <item name="itemIconSize">32dp</item>
         <item name="itemActiveIndicatorStyle">@style/BottomNavigationView.ActiveIndicator</item>
     </style>
@@ -14,11 +14,11 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
     <style name="BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">?attr/navBarActiveIndicatorColor</item>
+        <item name="android:color">?attr/dictionaryIndicationColor</item>
     </style>
 
     <style name="SearchView" parent="Widget.Material3.SearchView">
-        <item name="backgroundTint">?attr/searchViewToolbarBackgroundColor</item>
+        <item name="backgroundTint">?attr/dictionaryTintColor</item>
         <item name="android:textAppearance">@style/TextAppearance.SearchView</item>
     </style>
     <style name="TextAppearance.SearchView" parent="TextAppearance.Material3.SearchView">
@@ -36,6 +36,27 @@
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.WordModalText" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.DefinitionModalText" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Button.Modal" parent="Widget.Material3.Button.ElevatedButton.Icon">
+        <item name="android:textColor">?attr/dictionaryMainColor</item>
+        <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
+    </style>
+    <style name="TextAppearance.Button.Modal" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
 </resources>

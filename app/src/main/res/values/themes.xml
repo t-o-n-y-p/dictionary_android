@@ -1,13 +1,9 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.Dictionary" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="genericBackgroundColor">@color/main</item>
-        <item name="navBarBackgroundColor">@color/grey_background</item>
-        <item name="navBarContentColor">@color/grey_primary</item>
-        <item name="navBarActiveIndicatorColor">@color/grey_secondary</item>
-        <item name="searchViewToolbarBackgroundColor">@color/grey_background</item>
-        <item name="searchViewToolbarContentColor">@color/grey_primary</item>
-
-        <item name="contentColor">@color/grey_primary</item>
+        <item name="dictionaryContentColor">@color/grey_primary</item>
+        <item name="dictionaryIndicationColor">@color/grey_secondary</item>
+        <item name="dictionaryTintColor">@color/grey_background</item>
+        <item name="dictionaryMainColor">@color/main</item>
     </style>
 </resources>

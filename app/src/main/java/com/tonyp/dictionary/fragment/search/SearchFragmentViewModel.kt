@@ -67,6 +67,11 @@ class SearchFragmentViewModel @Inject constructor(
             }
     }
 
+    fun saveSearchItemToCache(value: String) {
+        cache.currentlySelectedWord = value
+        cache.currentlySelectedSearchResults = cache.searchResults.filter { it.word == value }
+    }
+
     sealed class SearchResultState {
 
         data object NotSet: SearchResultState()

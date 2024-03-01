@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="genericBackgroundColor" format="color"/>
-    <attr name="navBarBackgroundColor" format="color"/>
-    <attr name="navBarContentColor" format="color"/>
-    <attr name="navBarActiveIndicatorColor" format="color"/>
-    <attr name="searchViewToolbarBackgroundColor" format="color"/>
-    <attr name="searchViewToolbarContentColor" format="color"/>
-
-    <attr name="contentColor" format="color"/>
+    <attr name="dictionaryContentColor" format="color"/>
+    <attr name="dictionaryIndicationColor" format="color"/>
+    <attr name="dictionaryTintColor" format="color"/>
+    <attr name="dictionaryMainColor" format="color"/>
 </resources>

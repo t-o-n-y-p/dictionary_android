@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentSearchBinding
+import com.tonyp.dictionary.fragment.modal.definition.WordDefinitionBottomSheetDialogFragment
 import com.tonyp.dictionary.recyclerview.word.WordsAdapter
 import com.tonyp.dictionary.recyclerview.word.WordsItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +21,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchFragmentViewModel by viewModels()
     private val adapter: WordsAdapter = WordsAdapter(
-        onItemClicked = {}
+        onItemClicked = {
+            viewModel.saveSearchItemToCache(it)
+            WordDefinitionBottomSheetDialogFragment().show(
+                parentFragmentManager,
+                WordDefinitionBottomSheetDialogFragment.TAG)
+        }
     )
 
     override fun onCreateView(

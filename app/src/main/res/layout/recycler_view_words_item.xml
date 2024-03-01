@@ -15,6 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="@tools:sample/lorem[0]"
-        android:textColor="?attr/contentColor"/>
+        android:textColor="?attr/dictionaryContentColor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

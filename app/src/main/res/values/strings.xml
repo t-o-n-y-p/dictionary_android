@@ -8,4 +8,9 @@
     <string name="suggest_this_word">Suggest this word</string>
     <string name="an_unexpected_error_occurred">An unexpected error occurred.\nPlease try again later.</string>
     <string name="start_your_search">Start your search by typing a word\nin the search field above.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in_to_propose">Log in to propose another meaning</string>
+    <string name="propose_another_meaning">Propose another meaning</string>
+    <string name="your_account_is_blocked">Sorry, your cannot do this because your account is blocked.</string>
 </resources>

@@ -9,5 +9,7 @@ class WizardCache @Inject constructor() {
 
     var searchInput: String = ""
     var searchResults: List<MeaningResponseFullObject> = emptyList()
+    var currentlySelectedWord: String = ""
+    var currentlySelectedSearchResults: List<MeaningResponseFullObject> = emptyList()
 
 }

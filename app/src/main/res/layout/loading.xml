@@ -11,7 +11,7 @@
         app:constraint_referenced_ids="loading"/>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:progressTint="?attr/contentColor"
+        android:progressTint="?attr/dictionaryContentColor"
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
