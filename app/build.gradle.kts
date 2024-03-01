@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kapt)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -56,6 +57,10 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.uuid)
     implementation(libs.navigation.fragment)
+    implementation(libs.security.crypto)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
