@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/word_and_definition_form"
+    android:id="@+id/word_and_definition_input">
+
+    <fragment
+        android:id="@+id/word_and_definition_form"
+        android:name="com.tonyp.dictionary.fragment.suggestion.word.WordWithDefinitionSuggestionFragment"
+        tools:layout="@layout/fragment_word_with_definition_suggestion">
+    </fragment>
+
+</navigation>

@@ -3,6 +3,7 @@
     <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:background">?attr/dictionaryTintColor</item>
     </style>
     <style name="BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">?attr/dictionaryTintColor</item>
@@ -26,6 +27,11 @@
         <item name="android:textAppearance">@style/TextAppearance.SearchView</item>
     </style>
     <style name="TextAppearance.SearchView" parent="TextAppearance.Material3.SearchView">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="TextAppearance.WordList" parent="TextAppearance.Material3.TitleLarge">
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">22sp</item>

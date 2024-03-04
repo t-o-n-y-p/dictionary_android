@@ -14,10 +14,14 @@
             app:destination="@+id/login_to_propose"/>
         <action
             android:id="@+id/go_to_proposition"
-            app:destination="@+id/definition_input"/>
+            app:destination="@+id/definition_form"/>
+    </fragment>
+    <fragment
+        android:id="@+id/definition_form"
+        android:name="com.tonyp.dictionary.fragment.suggestion.definition.DefinitionSuggestionFragment"
+        tools:layout="@layout/fragment_definition_suggestion">
     </fragment>
 
     <include android:id="@+id/login_to_propose" app:graph="@navigation/login_to_propose"/>
-    <include android:id="@+id/definition_input" app:graph="@navigation/definition_input"/>
 
 </navigation>

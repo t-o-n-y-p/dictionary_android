@@ -11,12 +11,17 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/go_to_definition_proposition"
-            app:destination="@+id/definition_input"/>
+            app:destination="@+id/definition_form"/>
         <action
             android:id="@+id/go_to_word_and_definition_proposition"
-            app:destination="@+id/definition_input"/>
+            app:destination="@+id/word_and_definition_input"/>
+    </fragment>
+    <fragment
+        android:id="@+id/definition_form"
+        android:name="com.tonyp.dictionary.fragment.suggestion.definition.DefinitionSuggestionFragment"
+        tools:layout="@layout/fragment_definition_suggestion">
     </fragment>
 
-    <include android:id="@+id/definition_input" app:graph="@navigation/definition_input"/>
+    <include android:id="@+id/word_and_definition_input" app:graph="@navigation/word_and_definition_input"/>
 
 </navigation>

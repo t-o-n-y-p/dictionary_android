@@ -1,4 +1,4 @@
-package com.tonyp.dictionary.fragment.suggestion.definition
+package com.tonyp.dictionary.fragment.suggestion.word
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
-import com.tonyp.dictionary.databinding.FragmentDefinitionSuggestionBinding
+import com.tonyp.dictionary.databinding.FragmentWordWithDefinitionSuggestionBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_suggestion) {
+class WordWithDefinitionSuggestionFragment : Fragment(R.layout.fragment_word_with_definition_suggestion) {
 
-    private lateinit var binding: FragmentDefinitionSuggestionBinding
-    private val viewModel: DefinitionSuggestionFragmentViewModel by viewModels()
+    private lateinit var binding: FragmentWordWithDefinitionSuggestionBinding
+    private val viewModel: WordWithDefinitionSuggestionFragmentViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDefinitionSuggestionBinding.inflate(inflater)
+        binding = FragmentWordWithDefinitionSuggestionBinding.inflate(inflater)
         return binding.root
     }
 
@@ -32,26 +32,33 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
         viewModel.fillFieldsFromCache(binding)
         viewModel.submitState.observe(viewLifecycleOwner) {
             when (it) {
-                DefinitionSuggestionFragmentViewModel.SubmitState.NotSet -> {
+                WordWithDefinitionSuggestionFragmentViewModel.SubmitState.NotSet -> {
                     binding.submitButton.isVisible = true
                     binding.submittingButton.isVisible = false
                 }
-                DefinitionSuggestionFragmentViewModel.SubmitState.Loading -> {
+                WordWithDefinitionSuggestionFragmentViewModel.SubmitState.Loading -> {
                     binding.submitButton.isVisible = false
                     binding.submittingButton.isVisible = true
                 }
-                DefinitionSuggestionFragmentViewModel.SubmitState.Success -> {
+                WordWithDefinitionSuggestionFragmentViewModel.SubmitState.Success -> {
                     dismissBottomSheetAndSendToastWithText(R.string.your_proposition_has_been_submitted)
                 }
-                DefinitionSuggestionFragmentViewModel.SubmitState.Error -> {
+                WordWithDefinitionSuggestionFragmentViewModel.SubmitState.Error -> {
                     dismissBottomSheetAndSendToastWithText(R.string.an_error_has_occurred)
                 }
             }
         }
         binding.submitButton.setOnClickListener {
-            binding.alertDefinitionTextInput.text?.apply {
-                viewModel.submitDefinition(it.toString())
-            }
+            binding
+                .takeIf {
+                    it.alertWordTextInput.text != null
+                            && it.alertDefinitionTextInput.text != null
+                }?.let {
+                    viewModel.submitWordWithDefinition(
+                        word = it.alertWordTextInput.text.toString(),
+                        definition = it.alertDefinitionTextInput.text.toString()
+                    )
+                }
         }
     }
 

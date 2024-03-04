@@ -1,13 +1,19 @@
 package com.tonyp.dictionary.fragment.search
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.MeaningResponseFullObject
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentSearchBinding
+import com.tonyp.dictionary.fragment.modal.login.LoginBottomSheetDialogFragment
+import com.tonyp.dictionary.fragment.modal.suggestion.WordSuggestionBottomSheetDialogFragment
+import com.tonyp.dictionary.storage.get
+import com.tonyp.dictionary.storage.models.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchFragmentViewModel @Inject constructor(
+    @SecurePreferences private val securePreferences: SharedPreferences,
     private val useCase: SearchFragmentUseCase,
     private val cache: WizardCache
 ) : ViewModel() {
@@ -73,6 +80,12 @@ class SearchFragmentViewModel @Inject constructor(
         cache.currentlySelectedWord = value
         cache.currentlySelectedSearchResults = cache.searchResults.filter { it.word == value }
     }
+
+    fun getBottomSheetFragmentToOpen() =
+        securePreferences.get<UserPreferences>()
+            ?.takeIf { it.isLoggedIn() }
+            ?.let { WordSuggestionBottomSheetDialogFragment() }
+            ?: LoginBottomSheetDialogFragment()
 
     sealed class SearchResultState {
 

@@ -76,6 +76,19 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             val words = meaningObjects.mapNotNull { obj -> obj.word?.let { WordsItem(it) } }.distinct()
             adapter.submitList(words)
         }
+        binding.searchView.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_suggest -> {
+                    binding.searchView.editText.clearFocus()
+                    val fragmentToOpen = viewModel.getBottomSheetFragmentToOpen()
+                    fragmentToOpen.show(
+                        parentFragmentManager,
+                        fragmentToOpen::class.simpleName)
+                    true
+                }
+                else -> false
+            }
+        }
         viewModel.fillDataFromCache(binding)
         binding.searchView.inflateMenu(R.menu.search_view_menu)
         binding.searchView.show()
