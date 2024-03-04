@@ -9,14 +9,14 @@
     <string name="an_unexpected_error_occurred">An unexpected error occurred.\nPlease try again later.</string>
     <string name="start_your_search">Start your search by typing a word\nin the search field above.</string>
     <string name="i_know_better">I know better</string>
-    <string name="your_account_is_blocked">Sorry, your cannot do this because your account is blocked.</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="log_in">Log in</string>
     <string name="logging_in">Logging in…</string>
     <string name="you_must_log_in">You must log in to perform this action.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="submit">Submit</string>
     <string name="new_definition">New definition</string>
+    <string name="your_proposition_has_been_submitted">Your proposition has been submitted.</string>
+    <string name="an_error_has_occurred">An error has occurred. Please try again later.</string>
+    <string name="submitting">Submitting…</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.tonyp.dictionary.fragment.suggestion.definition
 
 import com.benasher44.uuid.uuid4
-import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.MeaningCreateObject
 import com.tonyp.dictionary.api.v1.models.MeaningCreateRequest
 import com.tonyp.dictionary.api.v1.models.MeaningCreateResponse

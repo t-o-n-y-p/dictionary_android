@@ -1,7 +1,6 @@
 package com.tonyp.dictionary.fragment.definition
 
 import android.content.SharedPreferences
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,11 +10,8 @@ import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionBinding
-import com.tonyp.dictionary.fragment.search.SearchFragmentViewModel
 import com.tonyp.dictionary.storage.get
-import com.tonyp.dictionary.storage.isUserLoggedIn
 import com.tonyp.dictionary.storage.models.UserPreferences
-import com.tonyp.dictionary.storage.models.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,7 +71,10 @@ class WordDefinitionFragmentViewModel @Inject constructor(
     }
 
     fun getButtonAction() =
-        if (securePreferences.isUserLoggedIn()) R.id.go_to_proposition else R.id.go_to_login
+        securePreferences
+            .takeIf { it.get<UserPreferences>()?.isLoggedIn() ?: false }
+            ?.let { R.id.go_to_proposition }
+            ?: R.id.go_to_login
 
     sealed class DefinitionState {
 

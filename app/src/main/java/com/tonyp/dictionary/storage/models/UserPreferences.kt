@@ -11,4 +11,10 @@ data class UserPreferences(
     val refreshTokenExpirationDateTime: Instant = Instant.DISTANT_PAST,
     val username: String = "",
     val roles: List<UserRole> = emptyList()
-)
+) {
+
+    fun getAuthHeaderValue() = "Bearer $accessToken"
+
+    fun isLoggedIn() = accessToken.isNotBlank()
+
+}

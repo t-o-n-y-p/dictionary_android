@@ -32,16 +32,19 @@ class AuthServiceStubImpl : AuthService {
         when {
             authHeaderValue.contains("admin") -> Response.success(
                 UserInfoResponse(
+                    preferredUsername = "admin",
                     groups = listOf(UserGroup.USER, UserGroup.ADMIN)
                 )
             )
             authHeaderValue.contains("banned") -> Response.success(
                 UserInfoResponse(
+                    preferredUsername = "banned",
                     groups = listOf(UserGroup.USER, UserGroup.ADMIN, UserGroup.BANNED)
                 )
             )
             else -> Response.success(
                 UserInfoResponse(
+                    preferredUsername = "unittest",
                     groups = listOf(UserGroup.USER)
                 )
             )
