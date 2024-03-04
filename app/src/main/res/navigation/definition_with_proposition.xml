@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/definition_proposition"
+    android:id="@+id/definition_with_proposition"
     app:startDestination="@+id/word_definition">
 
     <fragment
@@ -11,9 +11,13 @@
         tools:layout="@layout/fragment_word_definition">
         <action
             android:id="@+id/go_to_login"
-            app:destination="@id/login_to_propose"/>
+            app:destination="@+id/login_to_propose"/>
+        <action
+            android:id="@+id/go_to_proposition"
+            app:destination="@+id/definition_input"/>
     </fragment>
 
-    <include app:graph="@navigation/login_to_propose"/>
+    <include android:id="@+id/login_to_propose" app:graph="@navigation/login_to_propose"/>
+    <include android:id="@+id/definition_input" app:graph="@navigation/definition_input"/>
 
 </navigation>

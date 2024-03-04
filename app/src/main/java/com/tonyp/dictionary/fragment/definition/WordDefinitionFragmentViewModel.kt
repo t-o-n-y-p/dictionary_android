@@ -6,12 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonyp.dictionary.R
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionBinding
 import com.tonyp.dictionary.fragment.search.SearchFragmentViewModel
 import com.tonyp.dictionary.storage.get
+import com.tonyp.dictionary.storage.isUserLoggedIn
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.models.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,21 +41,6 @@ class WordDefinitionFragmentViewModel @Inject constructor(
                 fillDefinitionText(binding)
                 mDefinitionState.value = DefinitionState.Content
             }
-        val userPreferences = securePreferences.get<UserPreferences>()
-        when {
-            userPreferences == null || userPreferences.accessToken.isBlank() -> {
-                binding.wordDefinitionContent.logInToAddButton.isVisible = true
-                binding.wordDefinitionContent.addButton.isVisible = false
-            }
-            userPreferences.roles.contains(UserRole.BANNED) -> {
-                binding.wordDefinitionContent.logInToAddButton.isVisible = false
-                binding.wordDefinitionContent.addButton.isVisible = false
-            }
-            else -> {
-                binding.wordDefinitionContent.logInToAddButton.isVisible = false
-                binding.wordDefinitionContent.addButton.isVisible = true
-            }
-        }
     }
 
     private fun fillDefinitionText(binding: FragmentWordDefinitionBinding) {
@@ -86,6 +73,9 @@ class WordDefinitionFragmentViewModel @Inject constructor(
             }
         }
     }
+
+    fun getButtonAction() =
+        if (securePreferences.isUserLoggedIn()) R.id.go_to_proposition else R.id.go_to_login
 
     sealed class DefinitionState {
 

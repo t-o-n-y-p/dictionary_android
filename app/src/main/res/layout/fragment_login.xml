@@ -7,27 +7,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.login.LoginFragment">
 
+    <TextView
+        style="@style/TextAppearance.ModalBody"
+        android:id="@+id/warning_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/you_must_log_in"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/dictionaryContentColor"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/alert_username_text_input_layout"
-        style="@style/TextInputLayout.Login"
+        style="@style/TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/warning_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:hint="@string/username">
 
         <com.google.android.material.textfield.TextInputEditText
-            style="@style/TextInputEditText.Login"
+            style="@style/TextInputEditText"
             android:id="@+id/alert_username_text_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/alert_password_text_input_layout"
-        style="@style/TextInputLayout.Login"
+        style="@style/TextInputLayout"
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,11 +49,12 @@
         android:hint="@string/password">
 
         <com.google.android.material.textfield.TextInputEditText
-            style="@style/TextInputEditText.Login"
+            style="@style/TextInputEditText"
             android:inputType="textPassword"
             android:id="@+id/alert_password_text_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +40,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     binding.logInButton.isVisible = false
                     binding.loggingInButton.isVisible = true
                 }
-                LoginFragmentViewModel.LoginState.Content -> {}
+                LoginFragmentViewModel.LoginState.Content -> {
+                    findNavController().navigate(viewModel.getLoggedInAction())
+                }
                 LoginFragmentViewModel.LoginState.Error -> {
                     binding.logInButton.isVisible = true
                     binding.loggingInButton.isVisible = false

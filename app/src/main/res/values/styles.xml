@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
     <style name="BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">?attr/dictionaryTintColor</item>
         <item name="itemTextColor">?attr/dictionaryContentColor</item>
@@ -38,66 +42,67 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="TextAppearance.WordModalText" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.ModalTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">24sp</item>
     </style>
 
-    <style name="TextAppearance.DefinitionModalText" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.ModalBody" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="Button.Modal" parent="Widget.Material3.Button.ElevatedButton.Icon">
+    <style name="Button.Modal" parent="Widget.Material3.Button">
         <item name="android:textColor">?attr/dictionaryMainColor</item>
         <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
         <item name="android:minHeight">60dp</item>
         <item name="backgroundTint">?attr/dictionaryContentColor</item>
-        <item name="iconTint">?attr/dictionaryMainColor</item>
     </style>
-    <style name="Button.Modal.Inverted" parent="Widget.Material3.Button.ElevatedButton.Icon">
+    <style name="Button.Modal.Inverted" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">?attr/dictionaryContentColor</item>
         <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
         <item name="android:minHeight">60dp</item>
         <item name="backgroundTint">?attr/dictionaryTintColor</item>
-        <item name="iconTint">?attr/dictionaryTintColor</item>
     </style>
     <style name="TextAppearance.Button.Modal" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
         <item name="indicatorColor">?attr/dictionaryContentColor</item>
     </style>
 
-    <style name="TextInputLayout.Login" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="shapeAppearance">@style/TextInputShape.Login</item>
+    <style name="TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="shapeAppearance">@style/TextInputShape</item>
         <item name="android:textColorHint">?attr/dictionaryContentColor</item>
         <item name="hintTextColor">?attr/dictionaryContentColor</item>
         <item name="boxStrokeColor">@color/text_input_outline_color</item>
-        <item name="hintTextAppearance">@style/TextAppearance.Hint.Login</item>
+        <item name="hintTextAppearance">@style/TextAppearance.Hint</item>
         <item name="cursorColor">?attr/dictionaryContentColor</item>
+        <item name="counterTextColor">?attr/dictionaryContentColor</item>
+        <item name="counterTextAppearance">@style/TextAppearance.Hint</item>
     </style>
 
-    <style name="TextInputShape.Login" parent="ShapeAppearance.Material3.SmallComponent">
+    <style name="TextInputShape" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">4dp</item>
     </style>
-    <style name="TextAppearance.Hint.Login" parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.Hint" parent="TextAppearance.Material3.BodySmall">
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="TextInputEditText.Login" parent="Widget.Material3.TextInputEditText.OutlinedBox">
-        <item name="android:textAppearance">@style/TextAppearance.Main.Login</item>
+    <style name="TextInputEditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:textAppearance">@style/TextAppearance.EditText</item>
         <item name="android:textColor">?attr/dictionaryContentColor</item>
     </style>
-    <style name="TextAppearance.Main.Login" parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.EditText" parent="TextAppearance.Material3.BodySmall">
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">?attr/dictionaryContentColor</item>

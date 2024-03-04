@@ -20,6 +20,7 @@ object UserPreferencesMapper {
             refreshToken = tokenResponse.refreshToken ?: "",
             accessTokenExpirationDate = startTime + (tokenResponse.expiresIn ?: 0).seconds,
             refreshTokenExpirationDateTime = startTime + (tokenResponse.refreshExpiresIn ?: 0).seconds,
+            username = userInfoResponse.preferredUsername ?: "",
             roles = map(userInfoResponse.groups ?: emptyList())
         )
     }

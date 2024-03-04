@@ -47,8 +47,8 @@ class WordDefinitionFragment : Fragment(R.layout.fragment_word_definition) {
                 }
             }
         }
-        binding.wordDefinitionContent.logInToAddButton.setOnClickListener {
-            findNavController().navigate(R.id.go_to_login)
+        binding.wordDefinitionContent.addButton.setOnClickListener {
+            findNavController().navigate(viewModel.getButtonAction())
         }
         viewModel.fillDataFromCache(binding)
     }

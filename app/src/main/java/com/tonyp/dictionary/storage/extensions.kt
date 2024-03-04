@@ -23,3 +23,7 @@ inline fun <reified T> SharedPreferences.cleanup() = put(null as T)
 
 fun SharedPreferences.authHeaderValue(): String =
     "Bearer ${get<UserPreferences>()?.accessToken}"
+
+fun SharedPreferences.isUserLoggedIn(): Boolean =
+    get<UserPreferences>()?.accessToken?.isNotBlank() ?: false
+
