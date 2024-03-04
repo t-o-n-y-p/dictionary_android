@@ -20,6 +20,7 @@ uuid = "0.7.0"
 navigation = "2.7.7"
 crypto = "1.0.0"
 kotlinx-datetime = "0.5.0"
+kotlin-reflect = "1.9.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,7 +43,7 @@ uuid = { group = "com.benasher44", name = "uuid", version.ref = "uuid" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "crypto" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
-
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin-reflect" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

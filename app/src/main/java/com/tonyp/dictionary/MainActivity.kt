@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.tonyp.dictionary.fragment.incoming.IncomingFragment
 import com.tonyp.dictionary.fragment.recent.RecentFragment
 import com.tonyp.dictionary.fragment.search.SearchFragment
 import com.tonyp.dictionary.storage.get
@@ -14,13 +15,14 @@ import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.models.UserRole
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    @SecurePreferences
-    lateinit var securePreferences: SharedPreferences
+    @Inject @SecurePreferences lateinit var securePreferences: SharedPreferences
+    @Inject lateinit var cache: WizardCache
 
     private lateinit var menu: Menu
 
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         menu = bottomNavigationView.menu
         securePreferences.get<UserPreferences>()?.adjustMenu()
-        switchToFragment(SearchFragment())
+        switchToFragment(cache.currentFragment)
         securePreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             key
                 .takeIf { it == UserPreferences::class.simpleName }
@@ -39,18 +41,20 @@ class MainActivity : AppCompatActivity() {
         }
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.search -> switchToFragment(SearchFragment())
-                R.id.recent -> switchToFragment(RecentFragment())
+                R.id.search -> switchToFragment(SearchFragment::class)
+                R.id.recent -> switchToFragment(RecentFragment::class)
+                R.id.incoming -> switchToFragment(IncomingFragment::class)
                 else -> false
             }
         }
     }
 
-    private fun switchToFragment(fragment: Fragment): Boolean {
+    private fun switchToFragment(kClass: KClass<out Fragment>): Boolean {
+        cache.currentFragment = kClass
         supportFragmentManager.beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .setCustomAnimations(R.anim.slide_up, R.anim.no_animation)
-            .replace(R.id.fragment_container, fragment)
+            .replace(R.id.fragment_container, kClass.createInstance())
             .commit()
         return true
     }

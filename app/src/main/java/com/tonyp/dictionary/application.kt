@@ -27,6 +27,10 @@ class Module {
 
     @Provides
     @Singleton
+    fun wizardCache(): WizardCache = WizardCache()
+
+    @Provides
+    @Singleton
     fun dictionaryService(): DictionaryService = DictionaryServiceStubImpl()
 
     @Provides
