@@ -22,7 +22,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private val viewModel: SearchFragmentViewModel by viewModels()
     private val adapter: WordsAdapter = WordsAdapter(
         onItemClicked = {
-            viewModel.saveSearchItemToCache(it)
+            viewModel.saveSearchItem(it)
             binding.searchView.editText.clearFocus()
             WordDefinitionBottomSheetDialogFragment().show(
                 parentFragmentManager,

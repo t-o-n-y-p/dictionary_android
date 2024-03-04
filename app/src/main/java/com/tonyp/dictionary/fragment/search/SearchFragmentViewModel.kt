@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tonyp.dictionary.CommonPreferences
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.MeaningResponseFullObject
@@ -13,7 +14,9 @@ import com.tonyp.dictionary.databinding.FragmentSearchBinding
 import com.tonyp.dictionary.fragment.modal.login.LoginBottomSheetDialogFragment
 import com.tonyp.dictionary.fragment.modal.suggestion.WordSuggestionBottomSheetDialogFragment
 import com.tonyp.dictionary.storage.get
+import com.tonyp.dictionary.storage.models.DictionaryPreferences
 import com.tonyp.dictionary.storage.models.UserPreferences
+import com.tonyp.dictionary.storage.put
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
+    @CommonPreferences private val commonPreferences: SharedPreferences,
     private val useCase: SearchFragmentUseCase,
     private val cache: WizardCache
 ) : ViewModel() {
@@ -76,9 +80,13 @@ class SearchFragmentViewModel @Inject constructor(
             }
     }
 
-    fun saveSearchItemToCache(value: String) {
+    fun saveSearchItem(value: String) {
         cache.currentlySelectedWord = value
         cache.currentlySelectedSearchResults = cache.searchResults.filter { it.word == value }
+        commonPreferences.put(
+            commonPreferences.get<DictionaryPreferences>()?.copyAndAdd(value)
+                ?: DictionaryPreferences(listOf(value))
+        )
     }
 
     fun getBottomSheetFragmentToOpen() =

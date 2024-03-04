@@ -4,7 +4,9 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.tonyp.dictionary.fragment.recent.RecentFragment
 import com.tonyp.dictionary.fragment.search.SearchFragment
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
@@ -24,17 +26,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        menu = findViewById<BottomNavigationView>(R.id.bottom_navigation).menu
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        menu = bottomNavigationView.menu
         securePreferences.get<UserPreferences>()?.adjustMenu()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, SearchFragment())
-            .commit()
+        switchToFragment(SearchFragment())
         securePreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             key
                 .takeIf { it == UserPreferences::class.simpleName }
                 ?.let { sharedPreferences.get<UserPreferences>() }
                 ?.adjustMenu()
         }
+        bottomNavigationView.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.search -> switchToFragment(SearchFragment())
+                R.id.recent -> switchToFragment(RecentFragment())
+                else -> false
+            }
+        }
+    }
+
+    private fun switchToFragment(fragment: Fragment): Boolean {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+        return true
     }
 
     private fun UserPreferences.adjustMenu() =
