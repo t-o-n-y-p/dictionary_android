@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tonyp.dictionary.fragment.recent.RecentFragment
 import com.tonyp.dictionary.fragment.search.SearchFragment
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchToFragment(fragment: Fragment): Boolean {
         supportFragmentManager.beginTransaction()
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .setCustomAnimations(R.anim.slide_up, R.anim.no_animation)
             .replace(R.id.fragment_container, fragment)
             .commit()
         return true

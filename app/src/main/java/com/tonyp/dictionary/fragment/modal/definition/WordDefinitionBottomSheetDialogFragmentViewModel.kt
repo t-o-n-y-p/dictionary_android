@@ -10,8 +10,9 @@ class WordDefinitionBottomSheetDialogFragmentViewModel @Inject constructor(
     private val cache: WizardCache
 ) : ViewModel() {
 
-    fun clearCachedSelectedWord() {
+    fun clearCachedSelectedWordAndResults() {
         cache.currentlySelectedWord = ""
+        cache.currentlySelectedSearchResults = emptyList()
     }
 
 }

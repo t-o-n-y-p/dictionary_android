@@ -28,6 +28,6 @@ class WordDefinitionBottomSheetDialogFragment :
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        viewModel.clearCachedSelectedWord()
+        viewModel.clearCachedSelectedWordAndResults()
     }
 }
