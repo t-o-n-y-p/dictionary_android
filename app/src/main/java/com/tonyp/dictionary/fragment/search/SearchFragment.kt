@@ -42,7 +42,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         binding.searchViewContent.searchResultsContent.words.adapter = adapter
         binding.searchView.editText.addTextChangedListener {
-            viewModel.loadSearchResultsAndSaveToCache(input = it?.toString() ?: "")
+            viewModel.loadSearchResultsAndSaveToCache(input = it?.toString().orEmpty())
         }
         viewModel.searchResultState.observe(viewLifecycleOwner) {
             when (it) {

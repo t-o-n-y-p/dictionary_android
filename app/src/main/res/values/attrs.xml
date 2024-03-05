@@ -4,4 +4,5 @@
     <attr name="dictionaryIndicationColor" format="color"/>
     <attr name="dictionaryTintColor" format="color"/>
     <attr name="dictionaryMainColor" format="color"/>
+    <attr name="dictionaryDangerColor" format="color"/>
 </resources>

@@ -51,8 +51,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
         binding.logInButton.setOnClickListener {
             viewModel.login(
-                username = binding.alertUsernameTextInput.text?.toString() ?: "",
-                password = binding.alertPasswordTextInput.text?.toString() ?: ""
+                username = binding.alertUsernameTextInput.text?.toString().orEmpty(),
+                password = binding.alertPasswordTextInput.text?.toString().orEmpty()
             )
         }
     }

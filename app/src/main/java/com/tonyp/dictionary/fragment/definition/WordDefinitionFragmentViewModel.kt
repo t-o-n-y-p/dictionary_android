@@ -56,7 +56,7 @@ class WordDefinitionFragmentViewModel @Inject constructor(
                     .getOrNull()
                     ?.takeIf { it.result == ResponseResult.SUCCESS }
                     ?.let {
-                        val meaningObjects = it.meanings ?: emptyList()
+                        val meaningObjects = it.meanings.orEmpty()
                         cache.currentlySelectedSearchResults = meaningObjects
                         fillDefinitionText(binding)
                         mDefinitionState.value = DefinitionState.Content

@@ -54,7 +54,7 @@ class SearchFragmentViewModel @Inject constructor(
                             .getOrNull()
                             ?.takeIf { it.result == ResponseResult.SUCCESS }
                             ?.let {
-                                val meaningObjects = it.meanings ?: emptyList()
+                                val meaningObjects = it.meanings.orEmpty()
                                 cache.searchResults = meaningObjects
                                 mContentState.value = meaningObjects
                                 mSearchResultState.value = SearchResultState.Content

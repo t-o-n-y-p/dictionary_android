@@ -19,8 +19,10 @@ class RecentFragmentViewModel @Inject constructor(
 
     fun fillDataFromPreferences(adapter: WordsAdapter) {
         adapter.submitList(
-            commonPreferences.get<DictionaryPreferences>()?.recentWords?.map { WordsItem(it) }
-                ?: emptyList()
+            commonPreferences.get<DictionaryPreferences>()
+                ?.recentWords
+                ?.map { WordsItem(it) }
+                .orEmpty()
         )
     }
 

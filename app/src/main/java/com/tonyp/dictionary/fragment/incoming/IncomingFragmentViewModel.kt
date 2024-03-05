@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.MeaningResponseFullObject
 import com.tonyp.dictionary.api.v1.models.ResponseResult
-import com.tonyp.dictionary.databinding.FragmentIncomingBinding
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +35,7 @@ class IncomingFragmentViewModel @Inject constructor(
                     .getOrNull()
                     ?.takeIf { it.result == ResponseResult.SUCCESS }
                     ?.let {
-                        val meaningObjects = it.meanings ?: emptyList()
+                        val meaningObjects = it.meanings.orEmpty()
                         cache.incomingSearchResults = meaningObjects
                         mContentState.value = meaningObjects
                         mSearchResultState.value = SearchResultState.Content

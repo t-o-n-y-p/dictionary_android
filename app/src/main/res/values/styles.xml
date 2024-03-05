@@ -70,6 +70,11 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">24sp</item>
     </style>
+    <style name="TextAppearance.ModalTitle.Alert" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">22sp</item>
+    </style>
 
     <style name="TextAppearance.ModalBody" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">@font/roboto_regular</item>
@@ -83,10 +88,11 @@
         <item name="android:minHeight">60dp</item>
         <item name="backgroundTint">?attr/dictionaryContentColor</item>
     </style>
-    <style name="Button.Modal.Inverted" parent="Widget.Material3.Button.TextButton">
+    <style name="Button.Modal.Danger" parent="Button.Modal">
+        <item name="backgroundTint">?attr/dictionaryDangerColor</item>
+    </style>
+    <style name="Button.Modal.Inverted" parent="Button.Modal">
         <item name="android:textColor">?attr/dictionaryContentColor</item>
-        <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
-        <item name="android:minHeight">60dp</item>
         <item name="backgroundTint">?attr/dictionaryTintColor</item>
     </style>
     <style name="TextAppearance.Button.Modal" parent="TextAppearance.Material3.LabelLarge">
@@ -130,6 +136,21 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">?attr/dictionaryContentColor</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Alert" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/dictionaryTintColor</item>
+        <item name="android:textColor">?attr/dictionaryContentColor</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.ModalTitle.Alert</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.ModalBody</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Alert.Button</item>
+    </style>
+    <style name="Alert.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/dictionaryContentColor</item>
+        <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
     </style>
 
 </resources>

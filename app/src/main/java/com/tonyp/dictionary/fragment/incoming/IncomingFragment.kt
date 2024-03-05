@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentIncomingBinding
+import com.tonyp.dictionary.fragment.modal.incoming.IncomingSuggestionBottomSheetDialogFragment
+import com.tonyp.dictionary.fragment.modal.incoming.IncomingSuggestionBottomSheetDialogFragmentViewModel
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionAdapter
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +21,13 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
     private lateinit var binding: FragmentIncomingBinding
     private val viewModel: IncomingFragmentViewModel by viewModels()
     private val adapter: WordsWithDefinitionAdapter = WordsWithDefinitionAdapter(
-        onItemClicked = {}
+        onItemClicked = {
+            viewModel.saveSearchItem(it)
+            IncomingSuggestionBottomSheetDialogFragment().show(
+                parentFragmentManager,
+                IncomingSuggestionBottomSheetDialogFragment::class.simpleName
+            )
+        }
     )
 
     override fun onCreateView(
@@ -57,7 +65,9 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
             val wordsWithDefinition =
                 meaningObjects.map {
                     WordsWithDefinitionItem(
-                        id = it.id ?: "", word = it.word ?: "", definition = it.value ?: ""
+                        id = it.id.orEmpty(),
+                        word = it.word.orEmpty(),
+                        definition = it.value.orEmpty()
                     )
                 }
             adapter.submitList(wordsWithDefinition)
