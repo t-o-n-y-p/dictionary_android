@@ -25,16 +25,13 @@ class ProfileFragmentViewModel @Inject constructor(
     private fun getSecurePreferencesListener(
         binding: FragmentProfileBinding
     ): (SharedPreferences, String?) -> Unit =
-        { sharedPreferences, key ->
+        { _, key ->
             key
                 .takeIf { it == UserPreferences::class.simpleName }
-                ?.let { fillDataFromPreferences(binding, sharedPreferences) }
+                ?.let { fillDataFromPreferences(binding) }
         }
 
-    fun fillDataFromPreferences(
-        binding: FragmentProfileBinding,
-        securePreferences: SharedPreferences = this.securePreferences
-    ) =
+    fun fillDataFromPreferences(binding: FragmentProfileBinding) =
         securePreferences.get<UserPreferences>()
             ?.takeIf { it.isLoggedIn() }
             ?.let {  prefs ->

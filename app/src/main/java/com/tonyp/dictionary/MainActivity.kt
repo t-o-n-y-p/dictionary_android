@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        bottomNavigationView.setOnItemReselectedListener {}
     }
 
     private fun switchToFragment(kClass: KClass<out Fragment>): Boolean {

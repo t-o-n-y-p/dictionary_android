@@ -54,7 +54,7 @@ class LoginFragmentViewModel @Inject constructor(
                         instant
                     )
                 )
-                mLoginState.value = LoginState.Content
+                mLoginState.value = LoginState.Success
             } catch (t: Throwable) {
                 mLoginState.value = LoginState.Error
             }
@@ -73,7 +73,7 @@ class LoginFragmentViewModel @Inject constructor(
 
         data object Loading: LoginState()
 
-        data object Content: LoginState()
+        data object Success: LoginState()
 
         data object Error : LoginState()
     }

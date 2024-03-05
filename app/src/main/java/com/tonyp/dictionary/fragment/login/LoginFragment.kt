@@ -41,7 +41,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     binding.logInButton.isVisible = false
                     binding.loggingInButton.isVisible = true
                 }
-                LoginFragmentViewModel.LoginState.Content -> {
+                LoginFragmentViewModel.LoginState.Success -> {
                     try {
                         findNavController().navigate(viewModel.getLoggedInAction())
                     } catch (_: IllegalStateException) {
