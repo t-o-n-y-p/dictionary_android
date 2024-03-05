@@ -16,6 +16,6 @@ inline fun <reified T> SharedPreferences.put(value: T?) =
                 T::class.simpleName,
                 Json.encodeToString(EmptySerializersModule().serializer(), v))
         }
-    } ?: edit { remove(T::class.simpleName) }
+    } ?: edit { putString(T::class.simpleName, null) }
 
-inline fun <reified T> SharedPreferences.cleanup() = put(null as T)
+inline fun <reified T> SharedPreferences.cleanup() = put(null as? T)

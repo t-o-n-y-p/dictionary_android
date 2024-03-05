@@ -3,11 +3,11 @@ package com.tonyp.dictionary.storage.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class UserRole {
+enum class UserRole(val value: String) {
 
-    USER,
-    ADMIN,
-    BANNED,
-    TEST
+    USER("User"),
+    ADMIN("Administrator"),
+    BANNED("Blocked"),
+    TEST("Test user")
 
 }

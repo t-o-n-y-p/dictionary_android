@@ -54,12 +54,12 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="TextAppearance.ErrorMessage" parent="TextAppearance.Material3.BodyMedium">
-        <item name="fontFamily">@font/roboto_regular</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">16sp</item>
+    <style name="TextAppearance.Title" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">22sp</item>
     </style>
-    <style name="TextAppearance.InvitationMessage" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.Body" parent="TextAppearance.Material3.BodyMedium">
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">16sp</item>
@@ -82,16 +82,16 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="Button.Modal" parent="Widget.Material3.Button">
+    <style name="Button" parent="Widget.Material3.Button">
         <item name="android:textColor">?attr/dictionaryMainColor</item>
         <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
         <item name="android:minHeight">60dp</item>
         <item name="backgroundTint">?attr/dictionaryContentColor</item>
     </style>
-    <style name="Button.Modal.Danger" parent="Button.Modal">
+    <style name="Button.Danger" parent="Button">
         <item name="backgroundTint">?attr/dictionaryDangerColor</item>
     </style>
-    <style name="Button.Modal.Inverted" parent="Button.Modal">
+    <style name="Button.Inverted.Tint" parent="Button">
         <item name="android:textColor">?attr/dictionaryContentColor</item>
         <item name="backgroundTint">?attr/dictionaryTintColor</item>
     </style>

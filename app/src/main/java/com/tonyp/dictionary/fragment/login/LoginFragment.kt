@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +42,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     binding.loggingInButton.isVisible = true
                 }
                 LoginFragmentViewModel.LoginState.Content -> {
-                    findNavController().navigate(viewModel.getLoggedInAction())
+                    try {
+                        findNavController().navigate(viewModel.getLoggedInAction())
+                    } catch (_: IllegalStateException) {
+                        (parentFragment as? BottomSheetDialogFragment)!!.dismiss()
+                    }
                 }
                 LoginFragmentViewModel.LoginState.Error -> {
                     binding.logInButton.isVisible = true

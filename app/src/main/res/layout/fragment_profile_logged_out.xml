@@ -2,25 +2,37 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/invitation_group"
+        android:id="@+id/logged_out_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="invitation_text"/>
+        app:constraint_referenced_ids="logged_out_text,proceed_button"/>
 
     <TextView
         style="@style/TextAppearance.Body"
-        android:id="@+id/invitation_text"
+        android:id="@+id/logged_out_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_your_search"
+        android:text="@string/you_are_not_logged_in"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/proceed_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textAlignment="center"
         android:textColor="?attr/dictionaryContentColor"/>
+
+    <Button
+        style="@style/Button"
+        android:id="@+id/proceed_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/proceed"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/logged_out_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

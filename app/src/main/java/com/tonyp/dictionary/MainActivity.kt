@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tonyp.dictionary.fragment.incoming.IncomingFragment
+import com.tonyp.dictionary.fragment.profile.ProfileFragment
 import com.tonyp.dictionary.fragment.recent.RecentFragment
 import com.tonyp.dictionary.fragment.search.SearchFragment
 import com.tonyp.dictionary.storage.get
@@ -37,13 +38,14 @@ class MainActivity : AppCompatActivity() {
             key
                 .takeIf { it == UserPreferences::class.simpleName }
                 ?.let { sharedPreferences.get<UserPreferences>() }
-                ?.adjustMenu()
+                .adjustMenu()
         }
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.search -> switchToFragment(SearchFragment::class)
                 R.id.recent -> switchToFragment(RecentFragment::class)
                 R.id.incoming -> switchToFragment(IncomingFragment::class)
+                R.id.profile -> switchToFragment(ProfileFragment::class)
                 else -> false
             }
         }
@@ -59,8 +61,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun UserPreferences.adjustMenu() =
-        takeIf { it.roles.contains(UserRole.ADMIN) }
+    private fun UserPreferences?.adjustMenu() =
+        takeIf { it?.roles?.contains(UserRole.ADMIN) ?: false }
             ?.let { menu.findItem(R.id.incoming).isVisible = true }
-            ?: let { menu.findItem(R.id.incoming).isVisible = false }
+            ?: let {
+                menu.findItem(R.id.incoming).isVisible = false
+                cache.currentFragment
+                    .takeIf { it == IncomingFragment::class }
+                    ?.let { menu.performIdentifierAction(R.id.search, 0) }
+            }
 }

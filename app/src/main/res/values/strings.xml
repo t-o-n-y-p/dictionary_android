@@ -13,7 +13,7 @@
     <string name="password">Password</string>
     <string name="log_in">Log in</string>
     <string name="logging_in">Logging in…</string>
-    <string name="you_must_log_in">You must log in to perform this action.</string>
+    <string name="you_must_log_in">You must log in to work with suggestions.</string>
     <string name="submit">Submit</string>
     <string name="new_definition">New definition</string>
     <string name="your_proposition_has_been_submitted">Your proposition has been submitted.</string>
@@ -29,4 +29,8 @@
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="you_are_not_logged_in">You are not logged in.\nLog in to work with suggestions.</string>
+    <string name="groups">Groups</string>
+    <string name="log_out">Log out</string>
+    <string name="proceed">Proceed</string>
 </resources>

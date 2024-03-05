@@ -10,7 +10,7 @@ import com.tonyp.dictionary.databinding.FragmentLoginBottomSheetDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginBottomSheetDialogFragment :
+class LoginWithSuggestionBottomSheetDialogFragment :
     BottomSheetDialogFragment(R.layout.fragment_login_bottom_sheet_dialog) {
 
     private lateinit var binding: FragmentLoginBottomSheetDialogBinding

@@ -11,7 +11,7 @@ import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.MeaningResponseFullObject
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentSearchBinding
-import com.tonyp.dictionary.fragment.modal.login.LoginBottomSheetDialogFragment
+import com.tonyp.dictionary.fragment.modal.login.LoginWithSuggestionBottomSheetDialogFragment
 import com.tonyp.dictionary.fragment.modal.suggestion.WordSuggestionBottomSheetDialogFragment
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.DictionaryPreferences
@@ -93,7 +93,7 @@ class SearchFragmentViewModel @Inject constructor(
         securePreferences.get<UserPreferences>()
             ?.takeIf { it.isLoggedIn() }
             ?.let { WordSuggestionBottomSheetDialogFragment() }
-            ?: LoginBottomSheetDialogFragment()
+            ?: LoginWithSuggestionBottomSheetDialogFragment()
 
     sealed class SearchResultState {
 

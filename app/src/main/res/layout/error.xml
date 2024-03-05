@@ -12,7 +12,7 @@
         app:constraint_referenced_ids="error_text"/>
 
     <TextView
-        style="@style/TextAppearance.ErrorMessage"
+        style="@style/TextAppearance.Body"
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

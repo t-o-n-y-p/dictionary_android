@@ -41,7 +41,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        style="@style/Button.Modal"
+        style="@style/Button"
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
-        style="@style/Button.Modal.Inverted"
+        style="@style/Button.Inverted.Tint"
         android:id="@+id/submitting_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
