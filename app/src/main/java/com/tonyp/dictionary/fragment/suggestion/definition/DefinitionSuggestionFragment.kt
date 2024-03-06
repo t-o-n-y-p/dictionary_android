@@ -50,7 +50,7 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
         }
         binding.submitButton.setOnClickListener {
             binding.alertDefinitionTextInput.text?.apply {
-                viewModel.submitDefinition(it.toString())
+                viewModel.submitDefinition(toString())
             }
         }
     }

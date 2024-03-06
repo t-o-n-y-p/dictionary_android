@@ -8,7 +8,7 @@ import androidx.security.crypto.MasterKeys
 import com.tonyp.dictionary.service.AuthService
 import com.tonyp.dictionary.service.DictionaryService
 import com.tonyp.dictionary.service.impl.AuthServiceImpl
-import com.tonyp.dictionary.service.impl.DictionaryServiceStubImpl
+import com.tonyp.dictionary.service.impl.DictionaryServiceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,8 @@ class Module {
 
     @Provides
     @Singleton
-    fun dictionaryService(): DictionaryService = DictionaryServiceStubImpl()
+    fun dictionaryService(@SecurePreferences securePreferences: SharedPreferences): DictionaryService =
+        DictionaryServiceImpl.create(securePreferences)
 
     @Provides
     @Singleton
