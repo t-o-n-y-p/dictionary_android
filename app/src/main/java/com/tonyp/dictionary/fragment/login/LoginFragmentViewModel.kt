@@ -31,9 +31,8 @@ class LoginFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 mLoginState.value = LoginState.Loading
-                val withContext = withContext(Dispatchers.IO) { useCase.login(username, password) }
                 val tokenResponse =
-                    withContext
+                    withContext(Dispatchers.IO) { useCase.login(username, password) }
                         .getOrThrow()
                 securePreferences.put(
                     UserPreferencesMapper.map(tokenResponse)

@@ -86,7 +86,7 @@
         <item name="android:textColor">?attr/dictionaryMainColor</item>
         <item name="android:textAppearance">@style/TextAppearance.Button.Modal</item>
         <item name="android:minHeight">60dp</item>
-        <item name="backgroundTint">?attr/dictionaryContentColor</item>
+        <item name="backgroundTint">@color/button_color</item>
     </style>
     <style name="Button.Danger" parent="Button">
         <item name="backgroundTint">?attr/dictionaryDangerColor</item>

@@ -33,6 +33,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.logInButton.isEnabled = false
         viewModel.loginState.observe(viewLifecycleOwner) {
             when (it) {
                 LoginFragmentViewModel.LoginState.NotSet -> {
@@ -71,9 +72,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
         binding.alertUsernameTextInput.addTextChangedListener {
             binding.alertUsernameTextInputLayout.error = null
+            setLoginButtonState()
         }
         binding.alertPasswordTextInput.addTextChangedListener {
             binding.alertPasswordTextInputLayout.error = null
+            setLoginButtonState()
         }
         binding.logInButton.setOnClickListener {
             viewModel.login(
@@ -82,5 +85,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             )
         }
     }
+
+    private fun setLoginButtonState() =
+        (binding.alertUsernameTextInput.text?.isBlank() ?: true
+                || binding.alertPasswordTextInput.text?.isBlank() ?: true)
+            .let { binding.logInButton.isEnabled = !it }
 
 }
