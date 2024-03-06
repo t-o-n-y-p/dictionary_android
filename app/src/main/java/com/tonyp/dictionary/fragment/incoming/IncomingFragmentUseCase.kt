@@ -1,17 +1,16 @@
 package com.tonyp.dictionary.fragment.incoming
 
 import com.benasher44.uuid.uuid4
+import com.tonyp.dictionary.NetworkCallProcessor
 import com.tonyp.dictionary.api.v1.models.MeaningSearchFilter
 import com.tonyp.dictionary.api.v1.models.MeaningSearchRequest
 import com.tonyp.dictionary.api.v1.models.MeaningSearchResponse
-import com.tonyp.dictionary.networkCall
-import com.tonyp.dictionary.service.DictionaryService
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
 class IncomingFragmentUseCase @Inject constructor(
-    private val dictionaryService: DictionaryService
+    private val networkCallProcessor: NetworkCallProcessor
 ) {
 
     suspend fun search(): Result<MeaningSearchResponse> {
@@ -21,7 +20,7 @@ class IncomingFragmentUseCase @Inject constructor(
                 approved = false
             )
         )
-        return networkCall { dictionaryService.search(request) }
+        return networkCallProcessor.dictionaryService { search(request) }
     }
 
 }

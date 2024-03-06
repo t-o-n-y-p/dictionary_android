@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
+import com.tonyp.dictionary.service.dto.auth.UserGroup
 import com.tonyp.dictionary.storage.mappers.UserPreferencesMapper
 import com.tonyp.dictionary.storage.put
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,32 +30,29 @@ class LoginFragmentViewModel @Inject constructor(
     fun login(username: String, password: String) {
         viewModelScope.launch {
             try {
-                val instant = Clock.System.now()
+                mLoginState.value = LoginState.Loading
+                val withContext = withContext(Dispatchers.IO) { useCase.login(username, password) }
                 val tokenResponse =
-                    withContext(Dispatchers.IO) { useCase.login(username, password) }
-                        .getOrNull()
-                        ?: let {
-                            mLoginState.value = LoginState.Error
-                            return@launch
-                        }
+                    withContext
+                        .getOrThrow()
+                securePreferences.put(
+                    UserPreferencesMapper.map(tokenResponse)
+                )
                 val userInfoResponse =
-                    withContext(Dispatchers.IO) {
-                        useCase.getUserInfo(tokenResponse.authHeaderValue())
-                    }
-                        .getOrNull()
+                    withContext(Dispatchers.IO) { useCase.getUserInfo() }
+                        .getOrThrow()
+                        .takeUnless { it.groups?.contains(UserGroup.BANNED) ?: true }
                         ?: let {
-                            mLoginState.value = LoginState.Error
+                            mLoginState.value = LoginState.UserIsBanned
                             return@launch
                         }
                 securePreferences.put(
-                    UserPreferencesMapper.map(
-                        tokenResponse,
-                        userInfoResponse,
-                        instant
-                    )
+                    UserPreferencesMapper.map(tokenResponse, userInfoResponse)
                 )
                 mLoginState.value = LoginState.Success
-            } catch (t: Throwable) {
+            } catch (_: SecurityException) {
+                mLoginState.value = LoginState.InvalidCredentials
+            } catch (_: Throwable) {
                 mLoginState.value = LoginState.Error
             }
         }
@@ -74,6 +71,10 @@ class LoginFragmentViewModel @Inject constructor(
         data object Loading: LoginState()
 
         data object Success: LoginState()
+
+        data object InvalidCredentials : LoginState()
+
+        data object UserIsBanned : LoginState()
 
         data object Error : LoginState()
     }

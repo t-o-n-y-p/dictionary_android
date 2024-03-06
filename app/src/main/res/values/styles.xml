@@ -111,10 +111,14 @@
         <item name="android:textColorHint">?attr/dictionaryContentColor</item>
         <item name="hintTextColor">?attr/dictionaryContentColor</item>
         <item name="boxStrokeColor">@color/text_input_outline_color</item>
+        <item name="boxStrokeErrorColor">?attr/dictionaryDangerColor</item>
         <item name="hintTextAppearance">@style/TextAppearance.Hint</item>
         <item name="cursorColor">?attr/dictionaryContentColor</item>
         <item name="counterTextColor">?attr/dictionaryContentColor</item>
         <item name="counterTextAppearance">@style/TextAppearance.Hint</item>
+        <item name="errorTextColor">?attr/dictionaryDangerColor</item>
+        <item name="errorTextAppearance">@style/TextAppearance.Hint</item>
+        <item name="errorIconTint">?attr/dictionaryDangerColor</item>
     </style>
 
     <style name="TextInputShape" parent="ShapeAppearance.Material3.SmallComponent">

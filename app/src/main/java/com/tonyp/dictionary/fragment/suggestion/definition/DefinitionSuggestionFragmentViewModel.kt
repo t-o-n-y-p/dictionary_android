@@ -41,8 +41,7 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
                     useCase.create(
                         word = cache.currentlySelectedWord,
                         definition = definition,
-                        proposedBy = userPreferences.username,
-                        authHeaderValue = userPreferences.getAuthHeaderValue()
+                        proposedBy = userPreferences.username
                     )
                 }
                     .getOrNull()

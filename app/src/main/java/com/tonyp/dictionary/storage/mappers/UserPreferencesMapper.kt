@@ -5,21 +5,25 @@ import com.tonyp.dictionary.service.dto.auth.UserGroup
 import com.tonyp.dictionary.service.dto.auth.UserInfoResponse
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.models.UserRole
-import kotlinx.datetime.Instant
-import kotlin.time.Duration.Companion.seconds
 
 object UserPreferencesMapper {
 
     fun map(
+        tokenResponse: TokenResponse
+    ): UserPreferences {
+        return UserPreferences(
+            accessToken = tokenResponse.accessToken.orEmpty(),
+            refreshToken = tokenResponse.refreshToken.orEmpty()
+        )
+    }
+
+    fun map(
         tokenResponse: TokenResponse,
-        userInfoResponse: UserInfoResponse,
-        startTime: Instant
+        userInfoResponse: UserInfoResponse
     ): UserPreferences {
         return UserPreferences(
             accessToken = tokenResponse.accessToken.orEmpty(),
             refreshToken = tokenResponse.refreshToken.orEmpty(),
-            accessTokenExpirationDate = startTime + (tokenResponse.expiresIn ?: 0).seconds,
-            refreshTokenExpirationDateTime = startTime + (tokenResponse.refreshExpiresIn ?: 0).seconds,
             username = userInfoResponse.preferredUsername.orEmpty(),
             roles = map(userInfoResponse.groups.orEmpty())
         )

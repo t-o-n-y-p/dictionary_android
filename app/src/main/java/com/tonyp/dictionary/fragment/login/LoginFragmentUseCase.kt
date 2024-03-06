@@ -1,7 +1,6 @@
 package com.tonyp.dictionary.fragment.login
 
-import com.tonyp.dictionary.networkCall
-import com.tonyp.dictionary.service.AuthService
+import com.tonyp.dictionary.NetworkCallProcessor
 import com.tonyp.dictionary.service.dto.auth.TokenResponse
 import com.tonyp.dictionary.service.dto.auth.UserInfoResponse
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -9,15 +8,14 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class LoginFragmentUseCase @Inject constructor(
-    private val authService: AuthService
+    private val networkCallProcessor: NetworkCallProcessor
 ) {
 
     suspend fun login(username: String, password: String): Result<TokenResponse> =
-        networkCall { authService.login(username, password) }
+        networkCallProcessor.authService {
+            login(username = username, password = password)
+        }
 
-    suspend fun refresh(refreshToken: String): Result<TokenResponse> =
-        networkCall { authService.refresh(refreshToken) }
-
-    suspend fun getUserInfo(authHeaderValue: String): Result<UserInfoResponse> =
-        networkCall { authService.getUserInfo(authHeaderValue) }
+    suspend fun getUserInfo(): Result<UserInfoResponse> =
+        networkCallProcessor.authService { getUserInfo() }
 }

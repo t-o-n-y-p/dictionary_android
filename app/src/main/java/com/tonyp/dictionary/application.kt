@@ -7,7 +7,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.tonyp.dictionary.service.AuthService
 import com.tonyp.dictionary.service.DictionaryService
-import com.tonyp.dictionary.service.impl.AuthServiceStubImpl
+import com.tonyp.dictionary.service.impl.AuthServiceImpl
 import com.tonyp.dictionary.service.impl.DictionaryServiceStubImpl
 import dagger.Module
 import dagger.Provides
@@ -27,15 +27,12 @@ class Module {
 
     @Provides
     @Singleton
-    fun wizardCache(): WizardCache = WizardCache()
-
-    @Provides
-    @Singleton
     fun dictionaryService(): DictionaryService = DictionaryServiceStubImpl()
 
     @Provides
     @Singleton
-    fun authService(): AuthService = AuthServiceStubImpl()
+    fun authService(@SecurePreferences securePreferences: SharedPreferences): AuthService =
+        AuthServiceImpl.create(securePreferences)
 
     @Provides
     @Singleton

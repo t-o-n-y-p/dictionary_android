@@ -38,10 +38,10 @@ class ProfileFragmentViewModel @Inject constructor(
                 binding.fragmentProfileLoggedIn.usernameText.text = prefs.username
                 binding.fragmentProfileLoggedIn.groupsText.text =
                     prefs.roles.joinToString(separator = "\n") { "• ${it.value}" }
-                mLoggedInState.value= LoggedInState.LoggedIn
+                mLoggedInState.postValue(LoggedInState.LoggedIn)
             }
             ?: let {
-                mLoggedInState.value = LoggedInState.LoggedOut
+                mLoggedInState.postValue(LoggedInState.LoggedOut)
             }
 
     fun registerUserPreferencesListener(binding: FragmentProfileBinding) {

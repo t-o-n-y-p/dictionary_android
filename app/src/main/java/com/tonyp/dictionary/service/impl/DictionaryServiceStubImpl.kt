@@ -18,10 +18,7 @@ import retrofit2.Response
 
 class DictionaryServiceStubImpl : DictionaryService {
 
-    override suspend fun create(
-        body: MeaningCreateRequest,
-        authHeaderValue: String
-    ): Response<MeaningCreateResponse> =
+    override suspend fun create(body: MeaningCreateRequest): Response<MeaningCreateResponse> =
         Response.success(
             MeaningCreateResponse(
                 result = ResponseResult.SUCCESS,
@@ -36,10 +33,7 @@ class DictionaryServiceStubImpl : DictionaryService {
             )
         )
 
-    override suspend fun update(
-        body: MeaningUpdateRequest,
-        authHeaderValue: String
-    ): Response<MeaningUpdateResponse> =
+    override suspend fun update(body: MeaningUpdateRequest): Response<MeaningUpdateResponse> =
         Response.success(
             MeaningUpdateResponse(
                 result = ResponseResult.SUCCESS,
@@ -54,10 +48,7 @@ class DictionaryServiceStubImpl : DictionaryService {
             )
         )
 
-    override suspend fun delete(
-        body: MeaningDeleteRequest,
-        authHeaderValue: String
-    ): Response<MeaningDeleteResponse> =
+    override suspend fun delete(body: MeaningDeleteRequest): Response<MeaningDeleteResponse> =
         Response.success(
             MeaningDeleteResponse(
                 result = ResponseResult.SUCCESS,

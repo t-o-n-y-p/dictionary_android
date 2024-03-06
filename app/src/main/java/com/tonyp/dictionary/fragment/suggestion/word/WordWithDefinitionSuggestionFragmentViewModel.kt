@@ -41,8 +41,7 @@ class WordWithDefinitionSuggestionFragmentViewModel @Inject constructor(
                     useCase.create(
                         word = word,
                         definition = definition,
-                        proposedBy = userPreferences.username,
-                        authHeaderValue = userPreferences.getAuthHeaderValue()
+                        proposedBy = userPreferences.username
                     )
                 }
                     .getOrNull()

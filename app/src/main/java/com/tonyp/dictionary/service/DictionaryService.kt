@@ -14,20 +14,11 @@ import retrofit2.Response
 
 interface DictionaryService {
 
-    suspend fun create(
-        body: MeaningCreateRequest,
-        authHeaderValue: String
-    ): Response<MeaningCreateResponse>
+    suspend fun create(body: MeaningCreateRequest): Response<MeaningCreateResponse>
 
-    suspend fun update(
-        body: MeaningUpdateRequest,
-        authHeaderValue: String
-    ): Response<MeaningUpdateResponse>
+    suspend fun update(body: MeaningUpdateRequest): Response<MeaningUpdateResponse>
 
-    suspend fun delete(
-        body: MeaningDeleteRequest,
-        authHeaderValue: String
-    ): Response<MeaningDeleteResponse>
+    suspend fun delete(body: MeaningDeleteRequest): Response<MeaningDeleteResponse>
 
     suspend fun read(body: MeaningReadRequest): Response<MeaningReadResponse>
 

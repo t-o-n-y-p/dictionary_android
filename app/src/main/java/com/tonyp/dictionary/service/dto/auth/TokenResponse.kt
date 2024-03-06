@@ -7,12 +7,8 @@ import kotlinx.serialization.Serializable
 data class TokenResponse(
     @SerialName("access_token")
     val accessToken: String?,
-    @SerialName("expires_in")
-    val expiresIn: Int?,
     @SerialName("refresh_token")
-    val refreshToken: String?,
-    @SerialName("refresh_expires_in")
-    val refreshExpiresIn: Int?
+    val refreshToken: String?
 ) {
     fun authHeaderValue(): String = "Bearer $accessToken"
 }

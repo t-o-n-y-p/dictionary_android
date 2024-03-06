@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.security.crypto)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.converter)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlin.reflect)
 

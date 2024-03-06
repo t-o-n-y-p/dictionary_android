@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentIncomingBinding
 import com.tonyp.dictionary.fragment.modal.incoming.IncomingSuggestionBottomSheetDialogFragment
-import com.tonyp.dictionary.fragment.modal.incoming.IncomingSuggestionBottomSheetDialogFragmentViewModel
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionAdapter
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionItem
 import dagger.hilt.android.AndroidEntryPoint

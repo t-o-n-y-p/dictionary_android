@@ -33,4 +33,6 @@
     <string name="groups">Groups</string>
     <string name="log_out">Log out</string>
     <string name="proceed">Proceed</string>
+    <string name="incorrect_password">Incorrect password.</string>
+    <string name="this_user_is_blocked">This user is blocked.</string>
 </resources>

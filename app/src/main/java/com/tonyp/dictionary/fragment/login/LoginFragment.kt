@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -48,11 +50,30 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         (parentFragment as? BottomSheetDialogFragment)!!.dismiss()
                     }
                 }
-                LoginFragmentViewModel.LoginState.Error -> {
+                LoginFragmentViewModel.LoginState.InvalidCredentials -> {
                     binding.logInButton.isVisible = true
                     binding.loggingInButton.isVisible = false
+                    binding.alertPasswordTextInputLayout.error =
+                        getString(R.string.incorrect_password)
+                }
+                LoginFragmentViewModel.LoginState.UserIsBanned -> {
+                    binding.logInButton.isVisible = true
+                    binding.loggingInButton.isVisible = false
+                    binding.alertUsernameTextInputLayout.error =
+                        getString(R.string.this_user_is_blocked)
+                }
+                LoginFragmentViewModel.LoginState.Error -> {
+                    (parentFragment as? BottomSheetDialogFragment)?.dismiss()
+                        ?: (parentFragment?.parentFragment as? BottomSheetDialogFragment)!!.dismiss()
+                    Toast.makeText(context, R.string.an_error_has_occurred, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+        binding.alertUsernameTextInput.addTextChangedListener {
+            binding.alertUsernameTextInputLayout.error = null
+        }
+        binding.alertPasswordTextInput.addTextChangedListener {
+            binding.alertPasswordTextInputLayout.error = null
         }
         binding.logInButton.setOnClickListener {
             viewModel.login(
