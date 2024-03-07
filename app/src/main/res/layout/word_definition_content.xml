@@ -9,7 +9,7 @@
         android:id="@+id/content_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="word_text,definition_text"/>
+        app:constraint_referenced_ids="word_text,definition_text,add_button"/>
 
     <TextView
         style="@style/TextAppearance.ModalTitle"
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="@tools:sample/lorem[10]"
+        android:text="@string/no_definitions_found"
         app:layout_constraintTop_toBottomOf="@+id/word_text"
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="?attr/dictionaryContentColor"/>

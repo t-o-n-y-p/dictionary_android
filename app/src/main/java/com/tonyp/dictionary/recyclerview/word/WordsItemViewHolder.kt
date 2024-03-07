@@ -7,7 +7,7 @@ import com.tonyp.dictionary.R
 
 class WordsItemViewHolder(
     view: View,
-    private val onItemClicked: (String) -> Unit = {}
+    private val onItemClicked: (WordsItem) -> Unit = {}
 ) : RecyclerView.ViewHolder(view) {
 
     private val textView: TextView by lazy { itemView.findViewById(R.id.value) }
@@ -15,7 +15,7 @@ class WordsItemViewHolder(
     fun bind(item: WordsItem) {
         textView.text = item.value
         itemView.setOnClickListener {
-            onItemClicked(item.value)
+            onItemClicked(item)
         }
     }
 

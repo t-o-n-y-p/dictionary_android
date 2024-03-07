@@ -12,6 +12,7 @@ import com.tonyp.dictionary.databinding.FragmentIncomingBinding
 import com.tonyp.dictionary.fragment.modal.incoming.IncomingSuggestionBottomSheetDialogFragment
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.min
 
 @AndroidEntryPoint
 class IncomingFragment : Fragment(R.layout.fragment_incoming) {
@@ -29,6 +30,7 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
             )
         }
     )
+    private val pageSize = 10
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +45,7 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.resultsContent.wordsWithDefinitions
         recyclerView.adapter = adapter
-        recyclerView.addOnScrollListener(viewModel.getOnScrollListener(adapter))
+        recyclerView.addOnScrollListener(viewModel.getOnScrollListener(adapter, pageSize))
         viewModel.searchResultState.observe(viewLifecycleOwner) {
             when (it) {
                 IncomingFragmentViewModel.SearchResultState.Loading -> {
@@ -73,7 +75,7 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
             }
         }
         viewModel.contentState.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            adapter.submitList(it.slice(0 until min(it.size, pageSize)))
         }
         viewModel.fillDataFromCache()
     }

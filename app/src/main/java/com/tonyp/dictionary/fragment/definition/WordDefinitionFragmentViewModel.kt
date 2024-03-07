@@ -10,6 +10,7 @@ import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionBinding
+import com.tonyp.dictionary.recyclerview.word.WordsItemMapper
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,36 +30,31 @@ class WordDefinitionFragmentViewModel @Inject constructor(
     val definitionState: LiveData<DefinitionState> get() = mDefinitionState
 
     fun fillDataFromCache(binding: FragmentWordDefinitionBinding) {
-        binding.wordDefinitionContent.wordText.text = cache.currentlySelectedWord
-        cache.currentlySelectedSearchResults
+        binding.wordDefinitionContent.wordText.text = cache.currentlySelectedItem.value
+        cache.currentlySelectedItem.definitions
             .takeIf { it.isEmpty() }
             ?.let { loadDefinitionToCache(binding) }
             ?: let {
-                fillDefinitionText(binding)
+                binding.wordDefinitionContent.definitionText.text =
+                    cache.currentlySelectedItem.definitions
                 mDefinitionState.value = DefinitionState.Content
             }
-    }
-
-    private fun fillDefinitionText(binding: FragmentWordDefinitionBinding) {
-        binding.wordDefinitionContent.definitionText.text =
-            cache.currentlySelectedSearchResults
-                .takeIf { it.size == 1 }
-                ?.let { it[0].value }
-                ?: cache.currentlySelectedSearchResults
-                    .mapIndexed { i, e -> "${i + 1}. ${e.value}" }
-                    .joinToString(separator = "\n")
     }
 
     private fun loadDefinitionToCache(binding: FragmentWordDefinitionBinding) {
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) { useCase.search(cache.currentlySelectedWord) }
+                mDefinitionState.value = DefinitionState.Loading
+                withContext(Dispatchers.IO) { useCase.search(cache.currentlySelectedItem.value) }
                     .getOrNull()
                     ?.takeIf { it.result == ResponseResult.SUCCESS }
-                    ?.let {
-                        val meaningObjects = it.meanings.orEmpty()
-                        cache.currentlySelectedSearchResults = meaningObjects
-                        fillDefinitionText(binding)
+                    ?.let { response ->
+                        val items = WordsItemMapper.map(response.meanings.orEmpty())
+                            .ifEmpty { listOf(cache.currentlySelectedItem) }
+                        cache.currentlySelectedItem = items[0]
+                        cache.currentlySelectedItem.definitions
+                            .takeIf { it.isNotEmpty() }
+                            ?.let { binding.wordDefinitionContent.definitionText.text = it }
                         mDefinitionState.value = DefinitionState.Content
                     }
                     ?: let {

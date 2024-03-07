@@ -8,13 +8,10 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentSearchBinding
 import com.tonyp.dictionary.fragment.modal.definition.WordDefinitionBottomSheetDialogFragment
 import com.tonyp.dictionary.recyclerview.word.WordsAdapter
-import com.tonyp.dictionary.recyclerview.word.WordsItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.min
 
@@ -34,21 +31,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     )
     private val pageSize = 10
 
-    private fun getOnScrollListener(words: List<WordsItem>) =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
-                    findLastVisibleItemPosition()
-                        .takeIf { it == itemCount - 1 && itemCount < words.size }
-                        ?.let {
-                            adapter.submitList(
-                                words.slice(0 until min(words.size, itemCount + pageSize)))
-                        }
-                }
-            }
-        }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +43,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.searchViewContent.searchResultsContent.words
         recyclerView.adapter = adapter
+        recyclerView.addOnScrollListener(viewModel.getOnScrollListener(adapter, pageSize))
         binding.searchView.editText.addTextChangedListener {
             viewModel.loadSearchResultsAndSaveToCache(input = it?.toString().orEmpty())
         }
@@ -103,16 +86,14 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
         }
-        viewModel.contentState.observe(viewLifecycleOwner) { meaningObjects ->
-            val words = meaningObjects.mapNotNull { obj -> obj.word?.let { WordsItem(it) } }.distinct()
-            recyclerView.clearOnScrollListeners()
-            adapter.submitList(words.slice(0 until min(words.size, pageSize)))
-            recyclerView.addOnScrollListener(getOnScrollListener(words))
+        viewModel.contentState.observe(viewLifecycleOwner) {
+            adapter.submitList(it.slice(0 until min(it.size, pageSize)))
         }
         binding.searchView.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_suggest -> {
                     binding.searchView.editText.clearFocus()
+                    viewModel.clearCachedSelectedItem()
                     val fragmentToOpen = viewModel.getBottomSheetFragmentToOpen()
                     fragmentToOpen.show(
                         parentFragmentManager,

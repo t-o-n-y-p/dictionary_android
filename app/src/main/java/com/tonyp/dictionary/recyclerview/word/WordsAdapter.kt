@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.tonyp.dictionary.R
 
 class WordsAdapter(
-    private val onItemClicked: (String) -> Unit
+    private val onItemClicked: (WordsItem) -> Unit
 ) : ListAdapter<WordsItem, WordsItemViewHolder>(WordsItemCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordsItemViewHolder =
         WordsItemViewHolder(

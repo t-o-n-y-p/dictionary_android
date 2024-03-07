@@ -27,7 +27,7 @@ class RecentFragmentViewModel @Inject constructor(
         commonPreferences.get<DictionaryPreferences>()
             ?.recentWords
             ?.takeIf { it.isNotEmpty() }
-            ?.map { WordsItem(it) }
+            ?.map { WordsItem(value = it) }
             ?.let {
                 adapter.submitList(it)
                 mRecentResultState.value = RecentResultState.Content
@@ -36,8 +36,8 @@ class RecentFragmentViewModel @Inject constructor(
                 mRecentResultState.value = RecentResultState.NoResults
             }
 
-    fun saveRecentItem(value: String) {
-        cache.currentlySelectedWord = value
+    fun saveRecentItem(item: WordsItem) {
+        cache.currentlySelectedItem = item
     }
 
     sealed class RecentResultState {

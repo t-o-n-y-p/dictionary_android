@@ -5,14 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.tonyp.dictionary.CommonPreferences
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
-import com.tonyp.dictionary.api.v1.models.MeaningResponseFullObject
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentSearchBinding
 import com.tonyp.dictionary.fragment.modal.login.LoginWithSuggestionBottomSheetDialogFragment
 import com.tonyp.dictionary.fragment.modal.suggestion.WordSuggestionBottomSheetDialogFragment
+import com.tonyp.dictionary.recyclerview.word.WordsAdapter
+import com.tonyp.dictionary.recyclerview.word.WordsItem
+import com.tonyp.dictionary.recyclerview.word.WordsItemMapper
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.DictionaryPreferences
 import com.tonyp.dictionary.storage.models.UserPreferences
@@ -23,6 +27,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.min
 
 @HiltViewModel
 class SearchFragmentViewModel @Inject constructor(
@@ -35,13 +40,13 @@ class SearchFragmentViewModel @Inject constructor(
     private val mSearchResultState = MutableLiveData<SearchResultState>()
     val searchResultState: LiveData<SearchResultState> get() = mSearchResultState
 
-    private val mContentState = MutableLiveData<List<MeaningResponseFullObject>>()
-    val contentState: LiveData<List<MeaningResponseFullObject>> get() = mContentState
+    private val mContentState = MutableLiveData<List<WordsItem>>()
+    val contentState: LiveData<List<WordsItem>> get() = mContentState
 
     private var loadingWordsTask: Job = Job()
 
     fun loadSearchResultsAndSaveToCache(input: String) {
-        cache.searchResults = emptyList()
+        cache.items = emptyList()
         cache.searchInput = input
         loadingWordsTask.cancel()
         input.takeIf { it.isBlank() }
@@ -54,8 +59,8 @@ class SearchFragmentViewModel @Inject constructor(
                             .getOrNull()
                             ?.takeIf { it.result == ResponseResult.SUCCESS }
                             ?.let { response ->
-                                val meaningObjects = response.meanings.orEmpty()
-                                cache.searchResults = meaningObjects
+                                val meaningObjects = WordsItemMapper.map(response.meanings.orEmpty())
+                                cache.items = meaningObjects
                                 mContentState.value = meaningObjects
                                 mSearchResultState.value =
                                     meaningObjects
@@ -75,22 +80,25 @@ class SearchFragmentViewModel @Inject constructor(
 
     fun fillDataFromCache(binding: FragmentSearchBinding) {
         binding.searchView.setText(cache.searchInput)
-        cache.searchResults
+        cache.items
             .takeIf { it.isEmpty() }
             ?.let { loadSearchResultsAndSaveToCache(cache.searchInput) }
             ?: let {
-                mContentState.value = cache.searchResults
+                mContentState.value = cache.items
                 mSearchResultState.value = SearchResultState.Content
             }
     }
 
-    fun saveSearchItem(value: String) {
-        cache.currentlySelectedWord = value
-        cache.currentlySelectedSearchResults = cache.searchResults.filter { it.word == value }
+    fun saveSearchItem(item: WordsItem) {
+        cache.currentlySelectedItem = item
         commonPreferences.put(
-            commonPreferences.get<DictionaryPreferences>()?.copyAndAdd(value)
-                ?: DictionaryPreferences(listOf(value))
+            commonPreferences.get<DictionaryPreferences>()?.copyAndAdd(item.value)
+                ?: DictionaryPreferences(listOf(item.value))
         )
+    }
+
+    fun clearCachedSelectedItem() {
+        cache.currentlySelectedItem = WordsItem()
     }
 
     fun getBottomSheetFragmentToOpen() =
@@ -98,6 +106,24 @@ class SearchFragmentViewModel @Inject constructor(
             ?.takeIf { it.isLoggedIn() }
             ?.let { WordSuggestionBottomSheetDialogFragment() }
             ?: LoginWithSuggestionBottomSheetDialogFragment()
+
+    fun getOnScrollListener(adapter: WordsAdapter, pageSize: Int) =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
+                    findLastVisibleItemPosition()
+                        .takeIf { it == itemCount - 1 && itemCount < cache.items.size }
+                        ?.let {
+                            adapter.submitList(
+                                cache.items.slice(
+                                    0
+                                            until
+                                            min(cache.items.size, itemCount + pageSize)))
+                        }
+                }
+            }
+        }
 
     sealed class SearchResultState {
 

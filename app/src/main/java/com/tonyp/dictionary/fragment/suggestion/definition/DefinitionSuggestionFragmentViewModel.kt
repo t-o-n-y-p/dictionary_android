@@ -28,7 +28,7 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
     val submitState: LiveData<SubmitState> get() = mSubmitState
 
     fun fillFieldsFromCache(binding: FragmentDefinitionSuggestionBinding) {
-        binding.wordText.text = cache.currentlySelectedWord
+        binding.wordText.text = cache.currentlySelectedItem.value
     }
 
     fun submitDefinition(definition: String) {
@@ -39,7 +39,7 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
                     securePreferences.get<UserPreferences>() ?: throw IllegalStateException()
                 withContext(Dispatchers.IO) {
                     useCase.create(
-                        word = cache.currentlySelectedWord,
+                        word = cache.currentlySelectedItem.value,
                         definition = definition,
                         proposedBy = userPreferences.username
                     )
