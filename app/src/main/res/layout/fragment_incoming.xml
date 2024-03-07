@@ -31,6 +31,7 @@
         <include android:id="@+id/results_content" layout="@layout/recycler_view_words_with_definitions"/>
         <include android:id="@+id/results_loading" layout="@layout/loading"/>
         <include android:id="@+id/results_error" layout="@layout/error"/>
+        <include android:id="@+id/no_results" layout="@layout/no_results"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

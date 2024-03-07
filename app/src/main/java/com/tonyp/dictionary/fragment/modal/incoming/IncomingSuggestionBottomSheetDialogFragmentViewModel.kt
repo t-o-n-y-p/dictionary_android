@@ -27,8 +27,8 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) {
                     useCase.update(
-                        id = cache.currentlySelectedSearchResults[0].id.orEmpty(),
-                        version = cache.currentlySelectedSearchResults[0].version.orEmpty()
+                        id = cache.currentlySelectedIncomingItem.id,
+                        version = cache.currentlySelectedIncomingItem.version
                     )
                 }
                     .getOrNull()
@@ -46,8 +46,8 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) {
                     useCase.delete(
-                        id = cache.currentlySelectedSearchResults[0].id.orEmpty(),
-                        version = cache.currentlySelectedSearchResults[0].version.orEmpty()
+                        id = cache.currentlySelectedIncomingItem.id,
+                        version = cache.currentlySelectedIncomingItem.version
                     )
                 }
                     .getOrNull()
@@ -61,13 +61,8 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
     }
 
     fun fillDataFromCache(binding: FragmentWordDefinitionIncomingBinding) {
-        binding.wordText.text = cache.currentlySelectedWord
-        binding.definitionText.text = cache.currentlySelectedSearchResults[0].value
-    }
-
-    fun clearCachedSelectedWordAndResults() {
-        cache.currentlySelectedWord = ""
-        cache.currentlySelectedSearchResults = emptyList()
+        binding.wordText.text = cache.currentlySelectedIncomingItem.word
+        binding.definitionText.text = cache.currentlySelectedIncomingItem.definition
     }
 
     sealed class ProcessingState {

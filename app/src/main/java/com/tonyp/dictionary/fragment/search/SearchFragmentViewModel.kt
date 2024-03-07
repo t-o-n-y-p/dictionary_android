@@ -53,11 +53,15 @@ class SearchFragmentViewModel @Inject constructor(
                         withContext(Dispatchers.IO) { useCase.search(input) }
                             .getOrNull()
                             ?.takeIf { it.result == ResponseResult.SUCCESS }
-                            ?.let {
-                                val meaningObjects = it.meanings.orEmpty()
+                            ?.let { response ->
+                                val meaningObjects = response.meanings.orEmpty()
                                 cache.searchResults = meaningObjects
                                 mContentState.value = meaningObjects
-                                mSearchResultState.value = SearchResultState.Content
+                                mSearchResultState.value =
+                                    meaningObjects
+                                        .takeIf { it.isEmpty() }
+                                        ?.let { SearchResultState.NoResults }
+                                        ?: SearchResultState.Content
                             }
                             ?: let {
                                 mSearchResultState.value = SearchResultState.Error
@@ -102,6 +106,8 @@ class SearchFragmentViewModel @Inject constructor(
         data object Loading: SearchResultState()
 
         data object Content: SearchResultState()
+
+        data object NoResults: SearchResultState()
 
         data object Error: SearchResultState()
     }

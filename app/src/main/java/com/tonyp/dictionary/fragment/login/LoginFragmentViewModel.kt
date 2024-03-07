@@ -58,10 +58,10 @@ class LoginFragmentViewModel @Inject constructor(
     }
 
     fun getLoggedInAction() =
-        if (cache.currentlySelectedWord.isBlank())
-            R.id.go_to_word_and_definition_proposition
-        else
-            R.id.go_to_definition_proposition
+        cache.currentlySelectedWord
+            .takeIf { it.isBlank() }
+            ?.let { R.id.go_to_word_and_definition_proposition }
+            ?: R.id.go_to_definition_proposition
 
     sealed class LoginState {
 

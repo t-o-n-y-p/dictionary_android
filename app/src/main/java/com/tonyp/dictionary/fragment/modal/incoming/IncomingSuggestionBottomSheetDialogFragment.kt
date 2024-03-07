@@ -15,8 +15,9 @@ import com.tonyp.dictionary.databinding.FragmentWordDefinitionIncomingBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class IncomingSuggestionBottomSheetDialogFragment :
-    BottomSheetDialogFragment(R.layout.fragment_word_definition_incoming) {
+class IncomingSuggestionBottomSheetDialogFragment(
+    private val onRemoveItem: () -> Unit = {}
+) : BottomSheetDialogFragment(R.layout.fragment_word_definition_incoming) {
 
     private lateinit var binding: FragmentWordDefinitionIncomingBinding
     private val viewModel: IncomingSuggestionBottomSheetDialogFragmentViewModel by viewModels()
@@ -44,10 +45,12 @@ class IncomingSuggestionBottomSheetDialogFragment :
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Approved -> {
                     dismiss()
+                    onRemoveItem()
                     Toast.makeText(context, R.string.the_proposition_has_been_approved, Toast.LENGTH_SHORT).show()
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Declined -> {
                     dismiss()
+                    onRemoveItem()
                     Toast.makeText(context, R.string.the_proposition_has_been_declined, Toast.LENGTH_SHORT).show()
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Error -> {
@@ -70,11 +73,6 @@ class IncomingSuggestionBottomSheetDialogFragment :
                 .show()
         }
         viewModel.fillDataFromCache(binding)
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        viewModel.clearCachedSelectedWordAndResults()
     }
 
 }

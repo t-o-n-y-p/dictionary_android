@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.converter)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlin.reflect)
+    implementation(libs.recyclerview)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -87,8 +87,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun setLoginButtonState() =
-        (binding.alertUsernameTextInput.text?.isBlank() ?: true
-                || binding.alertPasswordTextInput.text?.isBlank() ?: true)
+        (binding.alertUsernameTextInput.text.isNullOrBlank()
+                || binding.alertPasswordTextInput.text.isNullOrBlank())
             .let { binding.logInButton.isEnabled = !it }
 
 }

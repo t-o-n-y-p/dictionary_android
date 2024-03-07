@@ -7,7 +7,7 @@ import com.tonyp.dictionary.R
 
 class WordsWithDefinitionItemViewHolder(
     view: View,
-    private val onItemClicked: (WordsWithDefinitionItem) -> Unit = {}
+    private val onItemClicked: (WordsWithDefinitionItem, Int) -> Unit = { _, _ -> }
 ) : RecyclerView.ViewHolder(view) {
 
     private val valueTextView: TextView
@@ -19,7 +19,7 @@ class WordsWithDefinitionItemViewHolder(
         valueTextView.text = item.word
         valueDefinitionTextView.text = item.definition
         itemView.setOnClickListener {
-            onItemClicked(item)
+            onItemClicked(item, absoluteAdapterPosition)
         }
     }
 

@@ -29,6 +29,7 @@
         android:background="?attr/dictionaryMainColor">
 
         <include android:id="@+id/recycler_view_words" layout="@layout/recycler_view_words"/>
+        <include android:id="@+id/no_results" layout="@layout/no_results"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

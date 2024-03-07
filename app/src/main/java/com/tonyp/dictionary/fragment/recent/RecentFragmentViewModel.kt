@@ -1,6 +1,8 @@
 package com.tonyp.dictionary.fragment.recent
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tonyp.dictionary.CommonPreferences
 import com.tonyp.dictionary.WizardCache
@@ -17,17 +19,35 @@ class RecentFragmentViewModel @Inject constructor(
     private val cache: WizardCache
 ) : ViewModel() {
 
-    fun fillDataFromPreferences(adapter: WordsAdapter) {
-        adapter.submitList(
-            commonPreferences.get<DictionaryPreferences>()
-                ?.recentWords
-                ?.map { WordsItem(it) }
-                .orEmpty()
-        )
-    }
+    private val mRecentResultState = MutableLiveData<RecentResultState>(RecentResultState.NotSet)
+
+    val recentResultState: LiveData<RecentResultState> get() = mRecentResultState
+
+    fun fillDataFromPreferences(adapter: WordsAdapter) =
+        commonPreferences.get<DictionaryPreferences>()
+            ?.recentWords
+            ?.takeIf { it.isNotEmpty() }
+            ?.map { WordsItem(it) }
+            ?.let {
+                adapter.submitList(it)
+                mRecentResultState.value = RecentResultState.Content
+            }
+            ?: let {
+                mRecentResultState.value = RecentResultState.NoResults
+            }
 
     fun saveRecentItem(value: String) {
         cache.currentlySelectedWord = value
+    }
+
+    sealed class RecentResultState {
+
+        data object NotSet : RecentResultState()
+
+        data object Content : RecentResultState()
+
+        data object NoResults : RecentResultState()
+
     }
 
 }

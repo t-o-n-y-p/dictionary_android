@@ -8,5 +8,6 @@
     <include android:id="@+id/search_results_content" layout="@layout/recycler_view_words"/>
     <include android:id="@+id/search_results_error" layout="@layout/error"/>
     <include android:id="@+id/search_invitation" layout="@layout/search_invitation"/>
+    <include android:id="@+id/search_no_results" layout="@layout/no_results"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
