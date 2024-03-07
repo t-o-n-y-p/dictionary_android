@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionIncomingBinding
+import com.tonyp.dictionary.fragment.dismissWithToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,18 +44,15 @@ class IncomingSuggestionBottomSheetDialogFragment(
                     binding.processingButton.isVisible = true
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Approved -> {
-                    dismiss()
+                    dismissWithToast(R.string.the_proposition_has_been_approved)
                     onRemoveItem()
-                    Toast.makeText(context, R.string.the_proposition_has_been_approved, Toast.LENGTH_SHORT).show()
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Declined -> {
-                    dismiss()
+                    dismissWithToast(R.string.the_proposition_has_been_declined)
                     onRemoveItem()
-                    Toast.makeText(context, R.string.the_proposition_has_been_declined, Toast.LENGTH_SHORT).show()
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Error -> {
-                    dismiss()
-                    Toast.makeText(context, R.string.an_unexpected_error_occurred, Toast.LENGTH_SHORT).show()
+                    dismissWithToast(R.string.an_unexpected_error_occurred)
                 }
             }
         }

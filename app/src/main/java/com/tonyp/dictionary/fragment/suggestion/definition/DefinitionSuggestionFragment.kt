@@ -11,6 +11,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentDefinitionSuggestionBinding
+import com.tonyp.dictionary.fragment.FragmentResultConstants
+import com.tonyp.dictionary.fragment.setFragmentResult
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,10 +43,18 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
                     binding.submittingButton.isVisible = true
                 }
                 DefinitionSuggestionFragmentViewModel.SubmitState.Success -> {
-                    dismissBottomSheetAndSendToastWithText(R.string.your_proposition_has_been_submitted)
+                    setFragmentResult(
+                        FragmentResultConstants.DEFINITION_SUGGESTION_FRAGMENT,
+                        FragmentResultConstants.SUGGESTION_STATUS,
+                        FragmentResultConstants.SUCCESS
+                    )
                 }
                 DefinitionSuggestionFragmentViewModel.SubmitState.Error -> {
-                    dismissBottomSheetAndSendToastWithText(R.string.an_error_has_occurred)
+                    setFragmentResult(
+                        FragmentResultConstants.DEFINITION_SUGGESTION_FRAGMENT,
+                        FragmentResultConstants.SUGGESTION_STATUS,
+                        FragmentResultConstants.UNEXPECTED_ERROR
+                    )
                 }
             }
         }
@@ -53,10 +63,5 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
                 viewModel.submitDefinition(toString())
             }
         }
-    }
-
-    private fun dismissBottomSheetAndSendToastWithText(resId: Int) {
-        (parentFragment?.parentFragment as? BottomSheetDialogFragment)!!.dismiss()
-        Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
     }
 }

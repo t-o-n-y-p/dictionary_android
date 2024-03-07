@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -13,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentLoginBinding
+import com.tonyp.dictionary.fragment.FragmentResultConstants
+import com.tonyp.dictionary.fragment.setFragmentResult
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -45,11 +46,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     binding.loggingInButton.isVisible = true
                 }
                 LoginFragmentViewModel.LoginState.Success -> {
-                    try {
-                        findNavController().navigate(viewModel.getLoggedInAction())
-                    } catch (_: IllegalStateException) {
-                        (parentFragment as? BottomSheetDialogFragment)!!.dismiss()
-                    }
+                    setFragmentResult(
+                        FragmentResultConstants.LOGIN_FRAGMENT,
+                        FragmentResultConstants.LOGIN_STATUS,
+                        FragmentResultConstants.SUCCESS
+                    )
+                    findNavController().navigate(viewModel.getLoggedInAction())
                 }
                 LoginFragmentViewModel.LoginState.InvalidCredentials -> {
                     binding.logInButton.isVisible = true
@@ -64,9 +66,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         getString(R.string.this_user_is_blocked)
                 }
                 LoginFragmentViewModel.LoginState.Error -> {
-                    (parentFragment as? BottomSheetDialogFragment)?.dismiss()
-                        ?: (parentFragment?.parentFragment as? BottomSheetDialogFragment)!!.dismiss()
-                    Toast.makeText(context, R.string.an_error_has_occurred, Toast.LENGTH_SHORT).show()
+                    setFragmentResult(
+                        FragmentResultConstants.LOGIN_FRAGMENT,
+                        FragmentResultConstants.LOGIN_STATUS,
+                        FragmentResultConstants.UNEXPECTED_ERROR
+                    )
                 }
             }
         }
