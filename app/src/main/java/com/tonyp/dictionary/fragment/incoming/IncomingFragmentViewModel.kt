@@ -86,9 +86,7 @@ class IncomingFragmentViewModel @Inject constructor(
         cache.incomingItems.removeAt(cache.currentlySelectedIncomingItemPosition)
         (binding.resultsContent.wordsWithDefinitions.adapter as? WordsWithDefinitionAdapter)
             ?.apply {
-                notifyItemRemoved(cache.currentlySelectedIncomingItemPosition)
-                val slice = cache.incomingItems.slice(0 until itemCount - 1)
-                submitList(slice)
+                submitList(cache.incomingItems.slice(0 until itemCount - 1))
             }
     }
 
