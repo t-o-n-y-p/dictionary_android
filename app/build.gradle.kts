@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlin.reflect)
     implementation(libs.recyclerview)
+    implementation(libs.swiperefreshlayout)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -45,4 +45,5 @@
     <string name="no_definitions_found">No definitions found for this word.</string>
     <string name="this_record_already_exists">This record already exists.</string>
     <string name="ok">OK</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -11,6 +11,20 @@
     <style name="TopAppBar" parent="Widget.Material3.Toolbar">
         <item name="titleTextColor">?attr/dictionaryContentColor</item>
         <item name="titleTextAppearance">@style/TextAppearance.TopAppBar</item>
+        <item name="buttonGravity">center_vertical</item>
+        <item name="popupTheme">@style/TopAppBar.OverflowMenu</item>
+    </style>
+    <style name="TopAppBar.OverflowButton">
+        <item name="android:src">@drawable/more_vert_fill0_wght400_grad0_opsz24</item>
+    </style>
+    <style name="TopAppBar.OverflowMenu" parent="ThemeOverlay.Material3">
+        <item name="android:backgroundTint">?attr/dictionaryMainColor</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TopAppBar.OverflowMenu.Text</item>
+        <item name="textAppearanceLargePopupMenu">@style/TopAppBar.OverflowMenu.Text</item>
+    </style>
+    <style name="TopAppBar.OverflowMenu.Text" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
     <style name="BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">?attr/dictionaryTintColor</item>

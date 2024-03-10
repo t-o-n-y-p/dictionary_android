@@ -13,6 +13,7 @@ import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionAdapter
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -30,10 +31,30 @@ class IncomingFragmentViewModel @Inject constructor(
     private val mContentState = MutableLiveData<List<WordsWithDefinitionItem>>()
     val contentState: LiveData<List<WordsWithDefinitionItem>> get() = mContentState
 
+    private var refreshDataTask: Job = Job()
+
     private fun loadSearchResultsAndSaveToCache() {
         cache.incomingItems.clear()
-        viewModelScope.launch {
-            mSearchResultState.value = SearchResultState.Loading
+        mSearchResultState.value = SearchResultState.Loading
+        refreshData()
+    }
+
+    fun fillDataFromCache() =
+        cache.incomingItems
+            .takeIf { it.isEmpty() }
+            ?.let { loadSearchResultsAndSaveToCache() }
+            ?: let {
+                mContentState.value = cache.incomingItems
+                mSearchResultState.value =
+                    cache.incomingItems
+                        .takeIf { it.isEmpty() }
+                        ?.let { SearchResultState.NoResults }
+                        ?: SearchResultState.Content
+            }
+
+    fun refreshData() {
+        refreshDataTask.cancel()
+        refreshDataTask = viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) { useCase.search() }
                     .getOrNull()
@@ -64,18 +85,6 @@ class IncomingFragmentViewModel @Inject constructor(
         }
     }
 
-    fun fillDataFromCache() =
-        cache.incomingItems
-            .takeIf { it.isEmpty() }
-            ?.let { loadSearchResultsAndSaveToCache() }
-            ?: let {
-                mContentState.value = cache.incomingItems
-                mSearchResultState.value =
-                    cache.incomingItems
-                        .takeIf { it.isEmpty() }
-                        ?.let { SearchResultState.NoResults }
-                        ?: SearchResultState.Content
-            }
 
     fun saveSearchItemAndPosition(item: WordsWithDefinitionItem, position: Int) {
         cache.currentlySelectedIncomingItem = item
@@ -83,14 +92,16 @@ class IncomingFragmentViewModel @Inject constructor(
     }
 
     fun removeCurrentIncomingItem(binding: FragmentIncomingBinding) {
-        cache.incomingItems.removeAt(cache.currentlySelectedIncomingItemPosition)
+        cache.incomingItems
+            .apply {
+                removeAt(cache.currentlySelectedIncomingItemPosition)
+            }
+            .takeIf { it.isEmpty() }
+            ?.let { mSearchResultState.value = SearchResultState.NoResults }
         (binding.resultsContent.wordsWithDefinitions.adapter as? WordsWithDefinitionAdapter)
             ?.apply {
                 submitList(cache.incomingItems.slice(0 until itemCount - 1))
             }
-        cache.incomingItems
-            .takeIf { it.isEmpty() }
-            ?.let { mSearchResultState.value = SearchResultState.NoResults }
     }
 
     fun getOnScrollListener(adapter: WordsWithDefinitionAdapter, pageSize: Int) =

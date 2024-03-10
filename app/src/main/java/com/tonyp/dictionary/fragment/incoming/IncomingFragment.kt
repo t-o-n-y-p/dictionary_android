@@ -46,6 +46,21 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
         val recyclerView = binding.resultsContent.wordsWithDefinitions
         recyclerView.adapter = adapter
         recyclerView.addOnScrollListener(viewModel.getOnScrollListener(adapter, pageSize))
+        binding.swipeToRefreshLayout.setOnRefreshListener {
+            viewModel.refreshData()
+        }
+        binding.swipeToRefreshLayout.setColorSchemeResources(R.color.grey_primary)
+        binding.swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_background)
+        binding.topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.swipe_to_refresh -> {
+                    binding.swipeToRefreshLayout.isRefreshing = true
+                    viewModel.refreshData()
+                    true
+                }
+                else -> false
+            }
+        }
         viewModel.searchResultState.observe(viewLifecycleOwner) {
             when (it) {
                 IncomingFragmentViewModel.SearchResultState.Loading -> {
@@ -59,18 +74,21 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
                     binding.resultsContent.contentGroup.isVisible = true
                     binding.resultsError.errorGroup.isVisible = false
                     binding.noResults.noResultsGroup.isVisible = false
+                    binding.swipeToRefreshLayout.isRefreshing = false
                 }
                 IncomingFragmentViewModel.SearchResultState.Error -> {
                     binding.resultsLoading.loadingGroup.isVisible = false
                     binding.resultsContent.contentGroup.isVisible = false
                     binding.resultsError.errorGroup.isVisible = true
                     binding.noResults.noResultsGroup.isVisible = false
+                    binding.swipeToRefreshLayout.isRefreshing = false
                 }
                 IncomingFragmentViewModel.SearchResultState.NoResults -> {
                     binding.resultsLoading.loadingGroup.isVisible = false
                     binding.resultsContent.contentGroup.isVisible = false
                     binding.resultsError.errorGroup.isVisible = false
                     binding.noResults.noResultsGroup.isVisible = true
+                    binding.swipeToRefreshLayout.isRefreshing = false
                 }
             }
         }

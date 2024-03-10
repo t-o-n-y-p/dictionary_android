@@ -104,7 +104,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
         }
         viewModel.fillDataFromCache(binding)
-        binding.searchView.inflateMenu(R.menu.search_view_menu)
+        binding.searchView.inflateMenu(R.menu.search_view)
         binding.searchView.show()
     }
 }

@@ -6,5 +6,7 @@
         <item name="dictionaryTintColor">@color/grey_background</item>
         <item name="dictionaryMainColor">@color/main</item>
         <item name="dictionaryDangerColor">@color/danger</item>
+
+        <item name="actionOverflowButtonStyle">@style/TopAppBar.OverflowButton</item>
     </style>
 </resources>
