@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentWordWithDefinitionSuggestionBinding
 import com.tonyp.dictionary.fragment.FragmentResultConstants
@@ -31,7 +30,7 @@ class WordWithDefinitionSuggestionFragment : Fragment(R.layout.fragment_word_wit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fillFieldsFromCache(binding)
+        binding.submitButton.isEnabled = false
         viewModel.submitState.observe(viewLifecycleOwner) {
             when (it) {
                 WordWithDefinitionSuggestionFragmentViewModel.SubmitState.NotSet -> {
@@ -41,6 +40,12 @@ class WordWithDefinitionSuggestionFragment : Fragment(R.layout.fragment_word_wit
                 WordWithDefinitionSuggestionFragmentViewModel.SubmitState.Loading -> {
                     binding.submitButton.isVisible = false
                     binding.submittingButton.isVisible = true
+                }
+                WordWithDefinitionSuggestionFragmentViewModel.SubmitState.Duplicate -> {
+                    binding.submitButton.isVisible = true
+                    binding.submittingButton.isVisible = false
+                    binding.alertDefinitionTextInputLayout.error =
+                        getString(R.string.this_record_already_exists)
                 }
                 WordWithDefinitionSuggestionFragmentViewModel.SubmitState.Success -> {
                     setFragmentResult(
@@ -58,17 +63,24 @@ class WordWithDefinitionSuggestionFragment : Fragment(R.layout.fragment_word_wit
                 }
             }
         }
-        binding.submitButton.setOnClickListener {
-            binding
-                .takeIf {
-                    it.alertWordTextInput.text != null
-                            && it.alertDefinitionTextInput.text != null
-                }?.let {
-                    viewModel.submitWordWithDefinition(
-                        word = it.alertWordTextInput.text.toString(),
-                        definition = it.alertDefinitionTextInput.text.toString()
-                    )
-                }
+        binding.alertWordTextInput.addTextChangedListener {
+            setSubmitButtonState()
         }
+        binding.alertDefinitionTextInput.addTextChangedListener {
+            binding.alertDefinitionTextInputLayout.error = null
+            setSubmitButtonState()
+        }
+        binding.submitButton.setOnClickListener {
+            viewModel.submitWordWithDefinition(
+                word = binding.alertWordTextInput.text.toString(),
+                definition = binding.alertDefinitionTextInput.text.toString()
+            )
+        }
+        viewModel.fillFieldsFromCache(binding)
     }
+
+    private fun setSubmitButtonState() =
+        (binding.alertWordTextInput.text.isNullOrBlank()
+                || binding.alertDefinitionTextInput.text.isNullOrBlank())
+            .let { binding.submitButton.isEnabled = !it }
 }

@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentDefinitionSuggestionBinding
 import com.tonyp.dictionary.fragment.FragmentResultConstants
@@ -31,7 +30,7 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fillFieldsFromCache(binding)
+        binding.submitButton.isEnabled = false
         viewModel.submitState.observe(viewLifecycleOwner) {
             when (it) {
                 DefinitionSuggestionFragmentViewModel.SubmitState.NotSet -> {
@@ -41,6 +40,12 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
                 DefinitionSuggestionFragmentViewModel.SubmitState.Loading -> {
                     binding.submitButton.isVisible = false
                     binding.submittingButton.isVisible = true
+                }
+                DefinitionSuggestionFragmentViewModel.SubmitState.Duplicate -> {
+                    binding.submitButton.isVisible = true
+                    binding.submittingButton.isVisible = false
+                    binding.alertDefinitionTextInputLayout.error =
+                        getString(R.string.this_record_already_exists)
                 }
                 DefinitionSuggestionFragmentViewModel.SubmitState.Success -> {
                     setFragmentResult(
@@ -58,10 +63,15 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
                 }
             }
         }
+        binding.alertDefinitionTextInput.addTextChangedListener {
+            binding.alertDefinitionTextInputLayout.error = null
+            binding.submitButton.isEnabled = it?.toString().isNullOrBlank().not()
+        }
         binding.submitButton.setOnClickListener {
             binding.alertDefinitionTextInput.text?.apply {
                 viewModel.submitDefinition(toString())
             }
         }
+        viewModel.fillFieldsFromCache(binding)
     }
 }

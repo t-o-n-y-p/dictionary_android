@@ -9,6 +9,7 @@ import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentDefinitionSuggestionBinding
+import com.tonyp.dictionary.fragment.ServerErrorConstants
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,8 +46,22 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
                     )
                 }
                     .getOrNull()
-                    ?.takeIf { it.result == ResponseResult.SUCCESS }
-                    ?.let { mSubmitState.value = SubmitState.Success }
+                    ?.let { response ->
+                        when (response.result) {
+                            null -> mSubmitState.value = SubmitState.Error
+                            ResponseResult.SUCCESS -> mSubmitState.value = SubmitState.Success
+                            ResponseResult.ERROR ->
+                                mSubmitState.value =
+                                    response.errors
+                                        ?.takeIf {
+                                            it.any {
+                                                e -> e.code == ServerErrorConstants.ALREADY_EXISTS
+                                            }
+                                        }
+                                        ?.let { SubmitState.Duplicate }
+                                        ?: SubmitState.Error
+                        }
+                    }
                     ?: let { mSubmitState.value = SubmitState.Error }
             } catch (t: Throwable) {
                 mSubmitState.value = SubmitState.Error
@@ -61,6 +76,8 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
         data object Loading: SubmitState()
 
         data object Success: SubmitState()
+
+        data object Duplicate: SubmitState()
 
         data object Error : SubmitState()
     }

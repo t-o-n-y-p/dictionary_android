@@ -37,4 +37,5 @@
     <string name="this_user_is_blocked">This user is blocked.</string>
     <string name="no_results">No results</string>
     <string name="no_definitions_found">No definitions found for this word.</string>
+    <string name="this_record_already_exists">This record already exists.</string>
 </resources>

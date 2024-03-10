@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.clearFragmentResultListener
-import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentLoginOnlyBottomSheetDialogBinding
 import com.tonyp.dictionary.fragment.FragmentResultConstants
 import com.tonyp.dictionary.fragment.dismissWithToast
-import com.tonyp.dictionary.fragment.login.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

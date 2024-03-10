@@ -9,7 +9,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentLoginBinding
 import com.tonyp.dictionary.fragment.FragmentResultConstants
@@ -84,8 +83,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
         binding.logInButton.setOnClickListener {
             viewModel.login(
-                username = binding.alertUsernameTextInput.text?.toString().orEmpty(),
-                password = binding.alertPasswordTextInput.text?.toString().orEmpty()
+                username = binding.alertUsernameTextInput.text.toString(),
+                password = binding.alertPasswordTextInput.text.toString()
             )
         }
     }

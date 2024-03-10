@@ -11,3 +11,9 @@ object FragmentResultConstants {
     const val UNEXPECTED_ERROR = "unexpectedError"
 
 }
+
+object ServerErrorConstants {
+
+    const val ALREADY_EXISTS = "ALREADY_EXISTS"
+
+}
