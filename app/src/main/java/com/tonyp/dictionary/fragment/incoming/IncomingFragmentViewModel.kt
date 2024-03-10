@@ -88,6 +88,9 @@ class IncomingFragmentViewModel @Inject constructor(
             ?.apply {
                 submitList(cache.incomingItems.slice(0 until itemCount - 1))
             }
+        cache.incomingItems
+            .takeIf { it.isEmpty() }
+            ?.let { mSearchResultState.value = SearchResultState.NoResults }
     }
 
     fun getOnScrollListener(adapter: WordsWithDefinitionAdapter, pageSize: Int) =

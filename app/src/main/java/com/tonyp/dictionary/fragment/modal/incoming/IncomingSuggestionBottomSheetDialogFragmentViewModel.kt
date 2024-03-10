@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonyp.dictionary.WizardCache
+import com.tonyp.dictionary.api.v1.models.IResponse
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionIncomingBinding
+import com.tonyp.dictionary.fragment.ServerErrorConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,8 +34,14 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                     )
                 }
                     .getOrNull()
-                    ?.takeIf { it.result == ResponseResult.SUCCESS }
-                    ?.let { mProcessingState.value = ProcessingState.Approved }
+                    ?.let { response ->
+                        mProcessingState.value =
+                            when (response.result) {
+                                null -> ProcessingState.Error
+                                ResponseResult.SUCCESS -> ProcessingState.Approved
+                                ResponseResult.ERROR -> getProcessingStateFromErrors(response)
+                            }
+                    }
                     ?: let { mProcessingState.value = ProcessingState.Error }
             } catch (t: Throwable) {
                 mProcessingState.value = ProcessingState.Error
@@ -51,14 +59,30 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                     )
                 }
                     .getOrNull()
-                    ?.takeIf { it.result == ResponseResult.SUCCESS }
-                    ?.let { mProcessingState.value = ProcessingState.Declined }
+                    ?.let { response ->
+                        mProcessingState.value =
+                            when (response.result) {
+                                null -> ProcessingState.Error
+                                ResponseResult.SUCCESS -> ProcessingState.Declined
+                                ResponseResult.ERROR -> getProcessingStateFromErrors(response)
+                            }
+                    }
                     ?: let { mProcessingState.value = ProcessingState.Error }
             } catch (t: Throwable) {
                 mProcessingState.value = ProcessingState.Error
             }
         }
     }
+
+    private fun getProcessingStateFromErrors(response: IResponse): ProcessingState =
+        when {
+            response.errors == null -> ProcessingState.Error
+            response.errors!!.any { it.code == ServerErrorConstants.NOT_FOUND } ->
+                ProcessingState.AlreadyDeclined
+            response.errors!!.any { it.code == ServerErrorConstants.CONCURRENT_MODIFICATION } ->
+                ProcessingState.AlreadyApproved
+            else -> ProcessingState.Error
+        }
 
     fun fillDataFromCache(binding: FragmentWordDefinitionIncomingBinding) {
         binding.wordText.text = cache.currentlySelectedIncomingItem.word
@@ -74,6 +98,10 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
         data object Approved: ProcessingState()
 
         data object Declined: ProcessingState()
+
+        data object AlreadyApproved: ProcessingState()
+
+        data object AlreadyDeclined: ProcessingState()
 
         data object Error : ProcessingState()
     }

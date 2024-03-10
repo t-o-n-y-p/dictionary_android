@@ -50,6 +50,16 @@ class IncomingSuggestionBottomSheetDialogFragment(
                     dismissWithToast(R.string.the_proposition_has_been_declined)
                     onRemoveItem()
                 }
+                IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.AlreadyApproved -> {
+                    dismissWithConcurrentModificationAlert(
+                        R.string.the_proposition_has_been_already_approved
+                    )
+                }
+                IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.AlreadyDeclined -> {
+                    dismissWithConcurrentModificationAlert(
+                        R.string.the_proposition_has_been_already_declined
+                    )
+                }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Error -> {
                     dismissWithToast(R.string.an_unexpected_error_occurred)
                 }
@@ -69,6 +79,16 @@ class IncomingSuggestionBottomSheetDialogFragment(
                 .show()
         }
         viewModel.fillDataFromCache(binding)
+    }
+
+    private fun dismissWithConcurrentModificationAlert(messageId: Int) {
+        dismiss()
+        MaterialAlertDialogBuilder(requireContext(), R.style.Alert)
+            .setTitle(getString(R.string.concurrent_modification))
+            .setMessage(getString(messageId))
+            .setPositiveButton(getString(R.string.ok)) { _, _ -> }
+            .show()
+        onRemoveItem()
     }
 
 }

@@ -17,7 +17,6 @@
     <string name="submit">Submit</string>
     <string name="new_definition">New definition</string>
     <string name="your_proposition_has_been_submitted">Your proposition has been submitted.</string>
-    <string name="an_error_occurred">An error occurred. Please try again later.</string>
     <string name="submitting">Submitting…</string>
     <string name="new_word">New word</string>
     <string name="approve">Approve</string>
@@ -25,6 +24,13 @@
     <string name="processing">Processing…</string>
     <string name="the_proposition_has_been_approved">The proposition has been approved.</string>
     <string name="the_proposition_has_been_declined">The proposition has been declined.</string>
+    <string name="concurrent_modification">Concurrent modification</string>
+    <string name="the_proposition_has_been_already_approved">
+        The proposition has been already approved by other user.\nNo changes have been made.
+    </string>
+    <string name="the_proposition_has_been_already_declined">
+        The proposition has been already declined by other user.\nNo changes have been made.
+    </string>
     <string name="decline_this_suggestion">Decline this suggestion?</string>
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="confirm">Confirm</string>
@@ -38,4 +44,5 @@
     <string name="no_results">No results</string>
     <string name="no_definitions_found">No definitions found for this word.</string>
     <string name="this_record_already_exists">This record already exists.</string>
+    <string name="ok">OK</string>
 </resources>

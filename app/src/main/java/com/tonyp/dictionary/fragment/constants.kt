@@ -15,5 +15,7 @@ object FragmentResultConstants {
 object ServerErrorConstants {
 
     const val ALREADY_EXISTS = "ALREADY_EXISTS"
+    const val NOT_FOUND = "NOT_FOUND"
+    const val CONCURRENT_MODIFICATION = "CONCURRENT_MODIFICATION"
 
 }
