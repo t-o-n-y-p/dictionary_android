@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.tonyp.dictionary.DictionaryTestRunner"
     }
 
     buildTypes {
@@ -65,10 +65,14 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.recyclerview)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.androidx.espresso.idling.resource)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.hilt.testing)
+    kaptAndroidTest(libs.kapt)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
 
 
 }

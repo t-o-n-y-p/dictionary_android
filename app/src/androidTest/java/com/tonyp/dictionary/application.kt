@@ -5,37 +5,45 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.runner.AndroidJUnitRunner
 import com.tonyp.dictionary.service.AuthService
 import com.tonyp.dictionary.service.DictionaryService
-import com.tonyp.dictionary.service.impl.AuthServiceImpl
-import com.tonyp.dictionary.service.impl.DictionaryServiceImpl
+import com.tonyp.dictionary.service.impl.AuthServiceStubImpl
+import com.tonyp.dictionary.service.impl.DictionaryServiceStubImpl
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import java.util.Optional
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
-@HiltAndroidApp
-class DictionaryApplication : Application()
+@Suppress("unused") // used in gradle config
+class DictionaryTestRunner : AndroidJUnitRunner() {
+
+    override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application =
+        super.newApplication(cl, HiltTestApplication::class.java.name, context)
+
+}
 
 @Module
-@InstallIn(SingletonComponent::class)
-class Module {
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [com.tonyp.dictionary.Module::class]
+)
+class TestModule {
 
     @Provides
     @Singleton
-    fun dictionaryService(@SecurePreferences securePreferences: SharedPreferences): DictionaryService =
-        DictionaryServiceImpl.create(securePreferences)
+    fun dictionaryService(): DictionaryService = DictionaryServiceStubImpl()
 
     @Provides
     @Singleton
     fun authService(@SecurePreferences securePreferences: SharedPreferences): AuthService =
-        AuthServiceImpl.create(securePreferences)
+        AuthServiceStubImpl(securePreferences)
 
     @Provides
     @Singleton
@@ -66,22 +74,10 @@ class Module {
     @Provides
     @Singleton
     @OptionalIdlingResource
-    fun idlingResource(): Optional<CountingIdlingResource> = Optional.empty()
+    fun idlingResource(): Optional<CountingIdlingResource> =
+        CountingIdlingResource("dictionary").let {
+            IdlingRegistry.getInstance().register(it)
+            Optional.of(it)
+        }
 
 }
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class MasterKey
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class SecurePreferences
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class CommonPreferences
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class OptionalIdlingResource

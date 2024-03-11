@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.tonyp.dictionary.CommonPreferences
+import com.tonyp.dictionary.OptionalIdlingResource
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
@@ -26,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Optional
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -34,7 +37,8 @@ class SearchFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
     @CommonPreferences private val commonPreferences: SharedPreferences,
     private val useCase: SearchFragmentUseCase,
-    private val cache: WizardCache
+    private val cache: WizardCache,
+    @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
     private val mSearchResultState = MutableLiveData<SearchResultState>()
@@ -53,6 +57,7 @@ class SearchFragmentViewModel @Inject constructor(
             ?.let { mSearchResultState.value = SearchResultState.NotSet }
             ?: let {
                 loadingWordsTask = viewModelScope.launch {
+                    idlingResource.ifPresent { it.increment() }
                     mSearchResultState.value = SearchResultState.Loading
                     try {
                         withContext(Dispatchers.IO) { useCase.search(input) }
@@ -73,6 +78,8 @@ class SearchFragmentViewModel @Inject constructor(
                             }
                     } catch (t: Throwable) {
                         mSearchResultState.value = SearchResultState.Error
+                    } finally {
+                        idlingResource.ifPresent { it.decrement() }
                     }
                 }
             }
