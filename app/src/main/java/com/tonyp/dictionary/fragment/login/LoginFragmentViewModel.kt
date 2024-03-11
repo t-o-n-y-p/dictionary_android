@@ -27,7 +27,7 @@ class LoginFragmentViewModel @Inject constructor(
     private val mLoginState = MutableLiveData<LoginState>(LoginState.NotSet)
     val loginState: LiveData<LoginState> get() = mLoginState
 
-    fun login(username: String, password: String) {
+    fun login(username: String, password: String) =
         viewModelScope.launch {
             try {
                 mLoginState.value = LoginState.Loading
@@ -55,7 +55,6 @@ class LoginFragmentViewModel @Inject constructor(
                 mLoginState.value = LoginState.Error
             }
         }
-    }
 
     fun getLoggedInAction() =
         cache.currentlySelectedItem.value

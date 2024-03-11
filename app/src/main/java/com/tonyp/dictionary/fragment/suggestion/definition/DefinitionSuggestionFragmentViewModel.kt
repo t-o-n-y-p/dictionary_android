@@ -32,7 +32,7 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
         binding.wordText.text = cache.currentlySelectedItem.value
     }
 
-    fun submitDefinition(definition: String) {
+    fun submitDefinition(definition: String) =
         viewModelScope.launch {
             mSubmitState.value = SubmitState.Loading
             try {
@@ -67,7 +67,6 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
                 mSubmitState.value = SubmitState.Error
             }
         }
-    }
 
     sealed class SubmitState {
 

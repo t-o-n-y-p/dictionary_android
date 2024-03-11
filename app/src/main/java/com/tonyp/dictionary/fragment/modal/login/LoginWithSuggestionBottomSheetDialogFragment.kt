@@ -29,30 +29,29 @@ class LoginWithSuggestionBottomSheetDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val childFragmentManager =
-            binding.bottomSheetContent
-                .getFragment<NavHostFragment>()
-                .childFragmentManager
-        childFragmentManager
-            .setFragmentResultListener(
-                FragmentResultConstants.LOGIN_FRAGMENT,
-                viewLifecycleOwner
-            ) { _, bundle ->
-                when (bundle.getString(FragmentResultConstants.LOGIN_STATUS)) {
-                    FragmentResultConstants.UNEXPECTED_ERROR ->
-                        dismissWithToast(R.string.an_unexpected_error_occurred)
+        binding.bottomSheetContent
+            .getFragment<NavHostFragment>()
+            .childFragmentManager
+            .apply {
+                setFragmentResultListener(
+                    FragmentResultConstants.LOGIN_FRAGMENT,
+                    viewLifecycleOwner
+                ) { _, bundle ->
+                    when (bundle.getString(FragmentResultConstants.LOGIN_STATUS)) {
+                        FragmentResultConstants.UNEXPECTED_ERROR ->
+                            dismissWithToast(R.string.an_unexpected_error_occurred)
+                    }
                 }
-            }
-        childFragmentManager
-            .setFragmentResultListener(
-                FragmentResultConstants.WORD_WITH_DEFINITION_SUGGESTION_FRAGMENT,
-                viewLifecycleOwner
-            ) { _, bundle ->
-                when (bundle.getString(FragmentResultConstants.SUGGESTION_STATUS)) {
-                    FragmentResultConstants.SUCCESS ->
-                        dismissWithToast(R.string.your_proposition_has_been_submitted)
-                    FragmentResultConstants.UNEXPECTED_ERROR ->
-                        dismissWithToast(R.string.an_unexpected_error_occurred)
+                setFragmentResultListener(
+                    FragmentResultConstants.WORD_WITH_DEFINITION_SUGGESTION_FRAGMENT,
+                    viewLifecycleOwner
+                ) { _, bundle ->
+                    when (bundle.getString(FragmentResultConstants.SUGGESTION_STATUS)) {
+                        FragmentResultConstants.SUCCESS ->
+                            dismissWithToast(R.string.your_proposition_has_been_submitted)
+                        FragmentResultConstants.UNEXPECTED_ERROR ->
+                            dismissWithToast(R.string.an_unexpected_error_occurred)
+                    }
                 }
             }
     }

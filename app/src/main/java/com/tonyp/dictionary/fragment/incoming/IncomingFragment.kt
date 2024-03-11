@@ -43,14 +43,15 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView = binding.resultsContent.wordsWithDefinitions
-        recyclerView.adapter = adapter
-        recyclerView.addOnScrollListener(viewModel.getOnScrollListener(adapter, pageSize))
-        binding.swipeToRefreshLayout.setOnRefreshListener {
-            viewModel.refreshData()
+        binding.resultsContent.wordsWithDefinitions.apply {
+            adapter = this@IncomingFragment.adapter
+            addOnScrollListener(viewModel.getOnScrollListener(this@IncomingFragment.adapter, pageSize))
         }
-        binding.swipeToRefreshLayout.setColorSchemeResources(R.color.grey_primary)
-        binding.swipeToRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.grey_background)
+        binding.swipeToRefreshLayout.apply {
+            setColorSchemeResources(R.color.grey_primary)
+            setProgressBackgroundColorSchemeResource(R.color.grey_background)
+            setOnRefreshListener { viewModel.refreshData() }
+        }
         binding.topAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.swipe_to_refresh -> {

@@ -41,7 +41,7 @@ class WordDefinitionFragmentViewModel @Inject constructor(
             }
     }
 
-    private fun loadDefinitionToCache(binding: FragmentWordDefinitionBinding) {
+    private fun loadDefinitionToCache(binding: FragmentWordDefinitionBinding) =
         viewModelScope.launch {
             try {
                 mDefinitionState.value = DefinitionState.Loading
@@ -64,7 +64,6 @@ class WordDefinitionFragmentViewModel @Inject constructor(
                 mDefinitionState.value = DefinitionState.Error
             }
         }
-    }
 
     fun getButtonAction() =
         securePreferences

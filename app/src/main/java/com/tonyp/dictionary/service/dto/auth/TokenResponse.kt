@@ -9,6 +9,4 @@ data class TokenResponse(
     val accessToken: String?,
     @SerialName("refresh_token")
     val refreshToken: String?
-) {
-    fun authHeaderValue(): String = "Bearer $accessToken"
-}
+)

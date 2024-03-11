@@ -30,26 +30,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        menu = bottomNavigationView.menu
-        securePreferences.get<UserPreferences>()?.adjustMenu()
-        switchToFragment(cache.currentFragment)
-        securePreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
-            key
-                .takeIf { it == UserPreferences::class.simpleName }
-                ?.let { sharedPreferences.get<UserPreferences>() }
-                .adjustMenu()
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).apply {
+            this@MainActivity.menu = menu
+            setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.search -> switchToFragment(SearchFragment::class)
+                    R.id.recent -> switchToFragment(RecentFragment::class)
+                    R.id.incoming -> switchToFragment(IncomingFragment::class)
+                    R.id.profile -> switchToFragment(ProfileFragment::class)
+                    else -> false
+                }
+            }
+            setOnItemReselectedListener {}
         }
-        bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.search -> switchToFragment(SearchFragment::class)
-                R.id.recent -> switchToFragment(RecentFragment::class)
-                R.id.incoming -> switchToFragment(IncomingFragment::class)
-                R.id.profile -> switchToFragment(ProfileFragment::class)
-                else -> false
+        securePreferences.apply {
+            get<UserPreferences>()?.adjustMenu()
+            registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
+                key
+                    .takeIf { it == UserPreferences::class.simpleName }
+                    ?.let { sharedPreferences.get<UserPreferences>() }
+                    .adjustMenu()
             }
         }
-        bottomNavigationView.setOnItemReselectedListener {}
+        switchToFragment(cache.currentFragment)
     }
 
     private fun switchToFragment(kClass: KClass<out Fragment>): Boolean {

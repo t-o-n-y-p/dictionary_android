@@ -24,7 +24,7 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
     private val mProcessingState = MutableLiveData<ProcessingState>(ProcessingState.NotSet)
     val processingState: LiveData<ProcessingState> get() = mProcessingState
 
-    fun approveSuggestion() {
+    fun approveSuggestion() =
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
@@ -47,9 +47,8 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                 mProcessingState.value = ProcessingState.Error
             }
         }
-    }
 
-    fun declineSuggestion() {
+    fun declineSuggestion() =
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
@@ -72,7 +71,6 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                 mProcessingState.value = ProcessingState.Error
             }
         }
-    }
 
     private fun getProcessingStateFromErrors(response: IResponse): ProcessingState =
         when {

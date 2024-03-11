@@ -41,11 +41,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView = binding.searchViewContent.searchResultsContent.words
-        recyclerView.adapter = adapter
-        recyclerView.addOnScrollListener(viewModel.getOnScrollListener(adapter, pageSize))
-        binding.searchView.editText.addTextChangedListener {
-            viewModel.loadSearchResultsAndSaveToCache(input = it?.toString().orEmpty())
+        binding.searchViewContent.searchResultsContent.words.apply {
+            adapter = this@SearchFragment.adapter
+            addOnScrollListener(viewModel.getOnScrollListener(this@SearchFragment.adapter, pageSize))
         }
         viewModel.searchResultState.observe(viewLifecycleOwner) {
             when (it) {
@@ -89,22 +87,27 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         viewModel.contentState.observe(viewLifecycleOwner) {
             adapter.submitList(it.slice(0 until min(it.size, pageSize)))
         }
-        binding.searchView.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_suggest -> {
-                    binding.searchView.editText.clearFocus()
-                    viewModel.clearCachedSelectedItem()
-                    val fragmentToOpen = viewModel.getBottomSheetFragmentToOpen()
-                    fragmentToOpen.show(
-                        parentFragmentManager,
-                        fragmentToOpen::class.simpleName)
-                    true
-                }
-                else -> false
-            }
-        }
         viewModel.fillDataFromCache(binding)
-        binding.searchView.inflateMenu(R.menu.search_view)
-        binding.searchView.show()
+        binding.searchView.apply {
+            editText.addTextChangedListener {
+                viewModel.loadSearchResultsAndSaveToCache(input = it?.toString().orEmpty())
+            }
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_suggest -> {
+                        binding.searchView.editText.clearFocus()
+                        viewModel.clearCachedSelectedItem()
+                        val fragmentToOpen = viewModel.getBottomSheetFragmentToOpen()
+                        fragmentToOpen.show(
+                            parentFragmentManager,
+                            fragmentToOpen::class.simpleName)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            inflateMenu(R.menu.search_view)
+            show()
+        }
     }
 }

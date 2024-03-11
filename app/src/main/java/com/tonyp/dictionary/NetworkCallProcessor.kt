@@ -35,21 +35,13 @@ class NetworkCallProcessor @Inject constructor(
                     }
                         .getOrNull()
                         ?: throwSecurityException()
-                    val userInfoResponse = authService {
-                        authService.getUserInfo()
-                    }
+                    securePreferences.put(UserPreferencesMapper.map(tokenResponse))
+                    val userInfoResponse = authService { getUserInfo() }
                         .getOrNull()
                         ?.takeUnless { it.groups?.contains(UserGroup.BANNED) ?: true }
                         ?: throwSecurityException()
-                    securePreferences.put(
-                        UserPreferencesMapper.map(
-                            tokenResponse,
-                            userInfoResponse
-                        )
-                    )
-                    dictionaryService(retries - 1) {
-                        block()
-                    }
+                    securePreferences.put(UserPreferencesMapper.map(tokenResponse, userInfoResponse))
+                    dictionaryService(retries - 1) { block() }
                         .getOrNull()
                         ?: throw IOException()
                 }

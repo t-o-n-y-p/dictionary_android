@@ -32,7 +32,7 @@ class WordWithDefinitionSuggestionFragmentViewModel @Inject constructor(
         binding.alertWordTextInput.setText(cache.searchInput)
     }
 
-    fun submitWordWithDefinition(word: String, definition: String) {
+    fun submitWordWithDefinition(word: String, definition: String) =
         viewModelScope.launch {
             mSubmitState.value = SubmitState.Loading
             try {
@@ -67,7 +67,6 @@ class WordWithDefinitionSuggestionFragmentViewModel @Inject constructor(
                 mSubmitState.value = SubmitState.Error
             }
         }
-    }
 
     sealed class SubmitState {
 
