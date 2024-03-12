@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.test.espresso.idling.CountingIdlingResource
+import com.tonyp.dictionary.OptionalIdlingResource
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
@@ -16,13 +18,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
 class WordWithDefinitionSuggestionFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
     private val useCase: WordWithDefinitionSuggestionFragmentUseCase,
-    private val cache: WizardCache
+    private val cache: WizardCache,
+    @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
     private val mSubmitState = MutableLiveData<SubmitState>(SubmitState.NotSet)
@@ -34,8 +38,9 @@ class WordWithDefinitionSuggestionFragmentViewModel @Inject constructor(
 
     fun submitWordWithDefinition(word: String, definition: String) =
         viewModelScope.launch {
-            mSubmitState.value = SubmitState.Loading
+            idlingResource.ifPresent { it.increment() }
             try {
+                mSubmitState.value = SubmitState.Loading
                 val userPreferences =
                     securePreferences.get<UserPreferences>() ?: throw IllegalStateException()
                 withContext(Dispatchers.IO) {
@@ -65,6 +70,8 @@ class WordWithDefinitionSuggestionFragmentViewModel @Inject constructor(
                     ?: let { mSubmitState.value = SubmitState.Error }
             } catch (t: Throwable) {
                 mSubmitState.value = SubmitState.Error
+            } finally {
+                idlingResource.ifPresent { it.decrement() }
             }
         }
 

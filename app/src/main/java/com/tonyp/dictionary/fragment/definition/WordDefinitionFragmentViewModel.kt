@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.test.espresso.idling.CountingIdlingResource
+import com.tonyp.dictionary.OptionalIdlingResource
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
@@ -17,13 +19,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
 class WordDefinitionFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
     private val useCase: WordDefinitionFragmentUseCase,
-    private val cache: WizardCache
+    private val cache: WizardCache,
+    @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
     private val mDefinitionState = MutableLiveData<DefinitionState>(DefinitionState.Loading)
@@ -43,6 +47,7 @@ class WordDefinitionFragmentViewModel @Inject constructor(
 
     private fun loadDefinitionToCache(binding: FragmentWordDefinitionBinding) =
         viewModelScope.launch {
+            idlingResource.ifPresent { it.increment() }
             try {
                 mDefinitionState.value = DefinitionState.Loading
                 withContext(Dispatchers.IO) { useCase.search(cache.currentlySelectedItem.value) }
@@ -62,6 +67,8 @@ class WordDefinitionFragmentViewModel @Inject constructor(
                     }
             } catch (t: Throwable) {
                 mDefinitionState.value = DefinitionState.Error
+            } finally {
+                idlingResource.ifPresent { it.decrement() }
             }
         }
 

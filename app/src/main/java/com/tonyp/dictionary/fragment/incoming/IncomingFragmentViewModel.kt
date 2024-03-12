@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.idling.CountingIdlingResource
+import com.tonyp.dictionary.OptionalIdlingResource
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentIncomingBinding
@@ -16,13 +18,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Optional
 import javax.inject.Inject
 import kotlin.math.min
 
 @HiltViewModel
 class IncomingFragmentViewModel @Inject constructor(
     private val useCase: IncomingFragmentUseCase,
-    private val cache: WizardCache
+    private val cache: WizardCache,
+    @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
     private val mSearchResultState = MutableLiveData<SearchResultState>()
@@ -55,6 +59,7 @@ class IncomingFragmentViewModel @Inject constructor(
     fun refreshData() {
         refreshDataTask.cancel()
         refreshDataTask = viewModelScope.launch {
+            idlingResource.ifPresent { it.increment() }
             try {
                 withContext(Dispatchers.IO) { useCase.search() }
                     .getOrNull()
@@ -81,6 +86,8 @@ class IncomingFragmentViewModel @Inject constructor(
                     }
             } catch (t: Throwable) {
                 mSearchResultState.value = SearchResultState.Error
+            } finally {
+                idlingResource.ifPresent { it.decrement() }
             }
         }
     }

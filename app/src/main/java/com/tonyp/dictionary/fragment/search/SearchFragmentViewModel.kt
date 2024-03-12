@@ -58,8 +58,8 @@ class SearchFragmentViewModel @Inject constructor(
             ?: let {
                 loadingWordsTask = viewModelScope.launch {
                     idlingResource.ifPresent { it.increment() }
-                    mSearchResultState.value = SearchResultState.Loading
                     try {
+                        mSearchResultState.value = SearchResultState.Loading
                         withContext(Dispatchers.IO) { useCase.search(input) }
                             .getOrNull()
                             ?.takeIf { it.result == ResponseResult.SUCCESS }

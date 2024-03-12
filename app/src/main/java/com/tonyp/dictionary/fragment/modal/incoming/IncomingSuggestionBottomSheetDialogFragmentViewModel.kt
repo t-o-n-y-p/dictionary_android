@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.test.espresso.idling.CountingIdlingResource
+import com.tonyp.dictionary.OptionalIdlingResource
 import com.tonyp.dictionary.WizardCache
 import com.tonyp.dictionary.api.v1.models.IResponse
 import com.tonyp.dictionary.api.v1.models.ResponseResult
@@ -13,12 +15,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
 class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
     private val useCase: IncomingSuggestionBottomSheetDialogFragmentUseCase,
-    private val cache: WizardCache
+    private val cache: WizardCache,
+    @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
     private val mProcessingState = MutableLiveData<ProcessingState>(ProcessingState.NotSet)
@@ -26,7 +30,9 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
 
     fun approveSuggestion() =
         viewModelScope.launch {
+            idlingResource.ifPresent { it.increment() }
             try {
+                mProcessingState.value = ProcessingState.Loading
                 withContext(Dispatchers.IO) {
                     useCase.update(
                         id = cache.currentlySelectedIncomingItem.id,
@@ -45,12 +51,16 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                     ?: let { mProcessingState.value = ProcessingState.Error }
             } catch (t: Throwable) {
                 mProcessingState.value = ProcessingState.Error
+            } finally {
+                idlingResource.ifPresent { it.decrement() }
             }
         }
 
     fun declineSuggestion() =
         viewModelScope.launch {
+            idlingResource.ifPresent { it.increment() }
             try {
+                mProcessingState.value = ProcessingState.Loading
                 withContext(Dispatchers.IO) {
                     useCase.delete(
                         id = cache.currentlySelectedIncomingItem.id,
@@ -69,6 +79,8 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                     ?: let { mProcessingState.value = ProcessingState.Error }
             } catch (t: Throwable) {
                 mProcessingState.value = ProcessingState.Error
+            } finally {
+                idlingResource.ifPresent { it.decrement() }
             }
         }
 

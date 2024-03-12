@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.test.espresso.idling.CountingIdlingResource
+import com.tonyp.dictionary.OptionalIdlingResource
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.SecurePreferences
 import com.tonyp.dictionary.WizardCache
@@ -15,13 +17,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
     private val useCase: LoginFragmentUseCase,
-    private val cache: WizardCache
+    private val cache: WizardCache,
+    @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
     private val mLoginState = MutableLiveData<LoginState>(LoginState.NotSet)
@@ -29,6 +33,7 @@ class LoginFragmentViewModel @Inject constructor(
 
     fun login(username: String, password: String) =
         viewModelScope.launch {
+            idlingResource.ifPresent { it.increment() }
             try {
                 mLoginState.value = LoginState.Loading
                 val tokenResponse =
@@ -53,6 +58,8 @@ class LoginFragmentViewModel @Inject constructor(
                 mLoginState.value = LoginState.InvalidCredentials
             } catch (_: Throwable) {
                 mLoginState.value = LoginState.Error
+            } finally {
+                idlingResource.ifPresent { it.decrement() }
             }
         }
 
