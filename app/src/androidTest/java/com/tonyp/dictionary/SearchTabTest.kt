@@ -17,7 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-class InstrumentedTest {
+class SearchTabTest {
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
@@ -26,7 +26,7 @@ class InstrumentedTest {
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun submitDefinitionOnly() {
+    fun testSearchAndViewDefinitions() {
         onView(withId(R.id.search_view))
             .perform(typeTextIntoSearchView("трава"))
         onView(withId(R.id.words))
