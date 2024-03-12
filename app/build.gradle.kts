@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.espresso.idling.resource)
 
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.hilt.testing)
     kaptAndroidTest(libs.kapt)
