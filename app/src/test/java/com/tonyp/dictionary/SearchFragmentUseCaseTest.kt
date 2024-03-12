@@ -7,7 +7,6 @@ import com.tonyp.dictionary.fragment.search.SearchFragmentUseCase
 import com.tonyp.dictionary.service.DictionaryService
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +16,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -69,15 +67,15 @@ class SearchFragmentUseCaseTest {
                     }
                 )
             }
-            val searchResult = useCase.search(word)
+            assertEquals(Result.success(response), useCase.search(word))
             coVerify(exactly = 1) { dictionaryService.search(getSearchRequestMatcher(word)) }
-            assertEquals(Result.success(response), searchResult)
         }
 
     @Test
     fun testUseCaseFailure() =
         runTest {
             val word = "обвал"
+            val exception = IOException()
             coEvery {
                 dictionaryService.search(getSearchRequestMatcher(word))
             } returns Response.error(400, "error".toResponseBody())
@@ -89,11 +87,12 @@ class SearchFragmentUseCaseTest {
                 runBlocking {
                     secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()(dictionaryService)
                 }
-                Result.failure(IOException())
+                Result.failure(exception)
             }
-            val searchResult = useCase.search(word)
+            useCase.search(word).apply {
+                assertTrue(isFailure)
+                assertEquals(exception, exceptionOrNull())
+            }
             coVerify(exactly = 1) { dictionaryService.search(getSearchRequestMatcher(word)) }
-            assertTrue(searchResult.isFailure)
-            assertNotNull(searchResult.exceptionOrNull())
         }
 }
