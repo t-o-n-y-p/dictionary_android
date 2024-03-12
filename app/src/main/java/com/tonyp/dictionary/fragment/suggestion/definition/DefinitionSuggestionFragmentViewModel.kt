@@ -42,7 +42,7 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
             try {
                 mSubmitState.value = SubmitState.Loading
                 val userPreferences =
-                    securePreferences.get<UserPreferences>() ?: throw IllegalStateException()
+                    securePreferences.get<UserPreferences>() ?: throw SecurityException()
                 withContext(Dispatchers.IO) {
                     useCase.create(
                         word = cache.currentlySelectedItem.value,

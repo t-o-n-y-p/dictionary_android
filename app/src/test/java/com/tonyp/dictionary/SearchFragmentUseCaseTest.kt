@@ -13,7 +13,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
@@ -35,13 +38,13 @@ class SearchFragmentUseCaseTest {
         )
     )
 
-    private val dictionaryServiceMock: DictionaryService = mockk()
+    private val dictionaryService: DictionaryService = mockk()
     private val testDispatcher = StandardTestDispatcher()
 
     private val useCase = SearchFragmentUseCase(
         NetworkCallProcessor(
             securePreferences = mockk(),
-            dictionaryService = dictionaryServiceMock,
+            dictionaryService = dictionaryService,
             authService = mockk()
         )
     )
@@ -50,14 +53,27 @@ class SearchFragmentUseCaseTest {
     fun setUp() = Dispatchers.setMain(testDispatcher)
 
     @Test
-    fun testUseCase() =
+    fun testUseCaseSuccess() =
         runTest {
             val word = "трава"
             coEvery {
-                dictionaryServiceMock.search(getSearchRequestMatcher(word))
+                dictionaryService.search(getSearchRequestMatcher(word))
             } returns Response.success(response)
             val searchResult = useCase.search(word)
-            coVerify(exactly = 1) { dictionaryServiceMock.search(getSearchRequestMatcher(word)) }
+            coVerify(exactly = 1) { dictionaryService.search(getSearchRequestMatcher(word)) }
             assertEquals(Result.success(response), searchResult)
+        }
+
+    @Test
+    fun testUseCaseFailure() =
+        runTest {
+            val word = "обвал"
+            coEvery {
+                dictionaryService.search(getSearchRequestMatcher(word))
+            } returns Response.error(400, "error".toResponseBody())
+            val searchResult = useCase.search(word)
+            coVerify(exactly = 1) { dictionaryService.search(getSearchRequestMatcher(word)) }
+            assertTrue(searchResult.isFailure)
+            assertNotNull(searchResult.exceptionOrNull())
         }
 }
