@@ -60,11 +60,11 @@ class SearchFragmentUseCaseTest {
                     any(),
                     captureCoroutine<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()
                 )
-            } answers {
+            } coAnswers {
                 Result.success(
-                    runBlocking {
-                        secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()(dictionaryService).body()!!
-                    }
+                    secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()
+                        (dictionaryService)
+                        .body()!!
                 )
             }
             assertEquals(Result.success(response), useCase.search(word))
@@ -83,10 +83,8 @@ class SearchFragmentUseCaseTest {
                 callProcessor.dictionaryService(
                     any(),
                     captureCoroutine<suspend DictionaryService.() -> Response<MeaningSearchResponse>>())
-            } answers {
-                runBlocking {
-                    secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()(dictionaryService)
-                }
+            } coAnswers {
+                secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()(dictionaryService)
                 Result.failure(exception)
             }
             useCase.search(word).apply {
