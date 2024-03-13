@@ -10,7 +10,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -56,16 +55,9 @@ class SearchFragmentUseCaseTest {
                 dictionaryService.search(getSearchRequestMatcher(word))
             } returns Response.success(response)
             coEvery {
-                callProcessor.dictionaryService(
-                    any(),
-                    captureCoroutine<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()
-                )
+                callProcessor.dictionaryService(any(), captureCoroutine<DictionarySearchCall>())
             } coAnswers {
-                Result.success(
-                    secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()
-                        (dictionaryService)
-                        .body()!!
-                )
+                Result.success(secondArg<DictionarySearchCall>()(dictionaryService).body()!!)
             }
             assertEquals(Result.success(response), useCase.search(word))
             coVerify(exactly = 1) { dictionaryService.search(getSearchRequestMatcher(word)) }
@@ -80,11 +72,9 @@ class SearchFragmentUseCaseTest {
                 dictionaryService.search(getSearchRequestMatcher(word))
             } returns Response.error(400, "error".toResponseBody())
             coEvery {
-                callProcessor.dictionaryService(
-                    any(),
-                    captureCoroutine<suspend DictionaryService.() -> Response<MeaningSearchResponse>>())
+                callProcessor.dictionaryService(any(), captureCoroutine<DictionarySearchCall>())
             } coAnswers {
-                secondArg<suspend DictionaryService.() -> Response<MeaningSearchResponse>>()(dictionaryService)
+                secondArg<DictionarySearchCall>()(dictionaryService)
                 Result.failure(exception)
             }
             useCase.search(word).apply {

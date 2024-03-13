@@ -7,7 +7,6 @@ import com.tonyp.dictionary.recyclerview.word.WordsAdapter
 import com.tonyp.dictionary.recyclerview.word.WordsItem
 import com.tonyp.dictionary.storage.models.DictionaryPreferences
 import io.mockk.Runs
-import io.mockk.called
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
