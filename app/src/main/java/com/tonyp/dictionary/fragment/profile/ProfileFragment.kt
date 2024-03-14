@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentProfileBinding
 import com.tonyp.dictionary.fragment.modal.login.LoginOnlyBottomSheetDialogFragment
@@ -48,7 +49,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             )
         }
         binding.fragmentProfileLoggedIn.logOutButton.setOnClickListener {
-            viewModel.logout()
+            MaterialAlertDialogBuilder(requireContext(), R.style.Alert)
+                .setTitle(getString(R.string.log_out))
+                .setMessage(getString(R.string.logout_confirmation))
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    viewModel.logout()
+                }
+                .show()
         }
         viewModel.fillDataFromPreferences(binding)
         viewModel.registerUserPreferencesListener(binding)

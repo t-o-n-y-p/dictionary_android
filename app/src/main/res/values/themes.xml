@@ -8,5 +8,6 @@
         <item name="dictionaryDangerColor">@color/danger</item>
 
         <item name="actionOverflowButtonStyle">@style/TopAppBar.OverflowButton</item>
+        <item name="android:windowSplashScreenBackground">@color/grey_background</item>
     </style>
 </resources>
