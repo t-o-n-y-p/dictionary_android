@@ -15,9 +15,7 @@ import com.tonyp.dictionary.fragment.ServerErrorConstants
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 
@@ -43,15 +41,13 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
                 mSubmitState.value = SubmitState.Loading
                 val userPreferences =
                     securePreferences.get<UserPreferences>() ?: throw SecurityException()
-                withContext(Dispatchers.IO) {
-                    useCase.create(
-                        word = cache.currentlySelectedItem.value,
-                        definition = definition,
-                        proposedBy = userPreferences.username
-                    )
-                }
-                    .getOrNull()
-                    ?.let { response ->
+                useCase.create(
+                    word = cache.currentlySelectedItem.value,
+                    definition = definition,
+                    proposedBy = userPreferences.username
+                )
+                    .getOrThrow()
+                    .let { response ->
                         when (response.result) {
                             null -> mSubmitState.value = SubmitState.Error
                             ResponseResult.SUCCESS -> mSubmitState.value = SubmitState.Success
@@ -67,8 +63,9 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
                                         ?: SubmitState.Error
                         }
                     }
-                    ?: let { mSubmitState.value = SubmitState.Error }
-            } catch (t: Throwable) {
+            } catch (_: SecurityException) {
+                mSubmitState.value = SubmitState.LoggedOut
+            } catch (_: Throwable) {
                 mSubmitState.value = SubmitState.Error
             } finally {
                 idlingResource.ifPresent { it.decrement() }
@@ -84,6 +81,8 @@ class DefinitionSuggestionFragmentViewModel @Inject constructor(
         data object Success: SubmitState()
 
         data object Duplicate: SubmitState()
+
+        data object LoggedOut : SubmitState()
 
         data object Error : SubmitState()
     }

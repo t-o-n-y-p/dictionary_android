@@ -61,6 +61,13 @@ class DefinitionSuggestionFragment : Fragment(R.layout.fragment_definition_sugge
                         FragmentResultConstants.UNEXPECTED_ERROR
                     )
                 }
+                DefinitionSuggestionFragmentViewModel.SubmitState.LoggedOut -> {
+                    setFragmentResult(
+                        FragmentResultConstants.DEFINITION_SUGGESTION_FRAGMENT,
+                        FragmentResultConstants.SUGGESTION_STATUS,
+                        FragmentResultConstants.LOGGED_OUT
+                    )
+                }
             }
         }
         binding.alertDefinitionTextInput.addTextChangedListener {

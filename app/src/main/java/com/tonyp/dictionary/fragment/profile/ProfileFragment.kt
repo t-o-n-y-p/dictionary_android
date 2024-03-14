@@ -43,7 +43,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
         binding.fragmentProfileLoggedOut.proceedButton.setOnClickListener {
             LoginOnlyBottomSheetDialogFragment().show(
-                parentFragmentManager,
+                requireActivity().supportFragmentManager,
                 LoginOnlyBottomSheetDialogFragment::class.simpleName
             )
         }

@@ -22,7 +22,7 @@ class RecentFragment : Fragment(R.layout.fragment_recent) {
         onItemClicked = {
             viewModel.saveRecentItem(it)
             WordDefinitionBottomSheetDialogFragment().show(
-                parentFragmentManager,
+                requireActivity().supportFragmentManager,
                 WordDefinitionBottomSheetDialogFragment::class.simpleName)
         }
     )

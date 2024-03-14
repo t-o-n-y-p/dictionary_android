@@ -10,6 +10,8 @@ import com.tonyp.dictionary.storage.mappers.UserPreferencesMapper
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.put
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
@@ -26,7 +28,7 @@ class NetworkCallProcessor @Inject constructor(
         block: suspend DictionaryService.() -> Response<T>
     ): Result<T> =
         runCatching {
-            val response = block(dictionaryService)
+            val response = withContext(Dispatchers.IO) { block(dictionaryService) }
             when {
                 response.code() == 401 && retries > 0 -> {
                     val userInfo = securePreferences.get<UserPreferences>()
@@ -51,7 +53,7 @@ class NetworkCallProcessor @Inject constructor(
 
     suspend fun <T> authService(block: suspend AuthService.() -> Response<T>): Result<T> =
         runCatching {
-            val response = block(authService)
+            val response = withContext(Dispatchers.IO) { block(authService) }
             when {
                 response.code() == 401 -> throwSecurityException()
                 else -> response.body() ?: throw IOException()

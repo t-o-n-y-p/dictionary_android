@@ -56,7 +56,7 @@ interface DictionaryServiceImpl : DictionaryService {
 
             val retrofit = Retrofit.Builder()
                 .client(okHttp)
-                .baseUrl("http://192.168.56.1:8080/api/v1/meaning/")
+                .baseUrl("http://192.168.0.103:8080/api/v1/meaning/")
                 .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
                 .build()
 

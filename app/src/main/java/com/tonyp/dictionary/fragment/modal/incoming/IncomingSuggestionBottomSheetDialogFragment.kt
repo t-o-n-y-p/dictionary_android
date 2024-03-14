@@ -10,7 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionIncomingBinding
+import com.tonyp.dictionary.fragment.FragmentResultConstants
 import com.tonyp.dictionary.fragment.dismissWithToast
+import com.tonyp.dictionary.fragment.setFragmentResult
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,6 +64,14 @@ class IncomingSuggestionBottomSheetDialogFragment(
                 }
                 IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.Error -> {
                     dismissWithToast(R.string.an_unexpected_error_occurred)
+                }
+                IncomingSuggestionBottomSheetDialogFragmentViewModel.ProcessingState.LoggedOut -> {
+                    dismiss()
+                    setFragmentResult(
+                        FragmentResultConstants.INCOMING_SUGGESTION_BOTTOM_SHEET_DIALOG_FRAGMENT,
+                        FragmentResultConstants.LOGIN_STATUS,
+                        FragmentResultConstants.LOGGED_OUT
+                    )
                 }
             }
         }

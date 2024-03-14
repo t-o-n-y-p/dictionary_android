@@ -16,9 +16,7 @@ import com.tonyp.dictionary.recyclerview.word.WordsItemMapper
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 
@@ -50,9 +48,9 @@ class WordDefinitionFragmentViewModel @Inject constructor(
             idlingResource.ifPresent { it.increment() }
             try {
                 mDefinitionState.value = DefinitionState.Loading
-                withContext(Dispatchers.IO) { useCase.search(cache.currentlySelectedItem.value) }
-                    .getOrNull()
-                    ?.takeIf { it.result == ResponseResult.SUCCESS }
+                useCase.search(cache.currentlySelectedItem.value)
+                    .getOrThrow()
+                    .takeIf { it.result == ResponseResult.SUCCESS }
                     ?.let { response ->
                         val items = WordsItemMapper.map(response.meanings.orEmpty())
                             .ifEmpty { listOf(cache.currentlySelectedItem) }
@@ -65,7 +63,7 @@ class WordDefinitionFragmentViewModel @Inject constructor(
                     ?: let {
                         mDefinitionState.value = DefinitionState.Error
                     }
-            } catch (t: Throwable) {
+            } catch (_: Throwable) {
                 mDefinitionState.value = DefinitionState.Error
             } finally {
                 idlingResource.ifPresent { it.decrement() }

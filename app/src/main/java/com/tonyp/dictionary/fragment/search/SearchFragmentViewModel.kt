@@ -24,10 +24,8 @@ import com.tonyp.dictionary.storage.models.DictionaryPreferences
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.put
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 import kotlin.math.min
@@ -60,9 +58,9 @@ class SearchFragmentViewModel @Inject constructor(
                     idlingResource.ifPresent { it.increment() }
                     try {
                         mSearchResultState.value = SearchResultState.Loading
-                        withContext(Dispatchers.IO) { useCase.search(input) }
-                            .getOrNull()
-                            ?.takeIf { it.result == ResponseResult.SUCCESS }
+                        useCase.search(input)
+                            .getOrThrow()
+                            .takeIf { it.result == ResponseResult.SUCCESS }
                             ?.let { response ->
                                 val meaningObjects = WordsItemMapper.map(response.meanings.orEmpty())
                                 cache.items = meaningObjects
@@ -76,7 +74,7 @@ class SearchFragmentViewModel @Inject constructor(
                             ?: let {
                                 mSearchResultState.value = SearchResultState.Error
                             }
-                    } catch (t: Throwable) {
+                    } catch (_: Throwable) {
                         mSearchResultState.value = SearchResultState.Error
                     } finally {
                         idlingResource.ifPresent { it.decrement() }

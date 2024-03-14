@@ -25,7 +25,7 @@ class IncomingFragment : Fragment(R.layout.fragment_incoming) {
             IncomingSuggestionBottomSheetDialogFragment(
                 onRemoveItem = { viewModel.removeCurrentIncomingItem(binding) }
             ).show(
-                parentFragmentManager,
+                requireActivity().supportFragmentManager,
                 IncomingSuggestionBottomSheetDialogFragment::class.simpleName
             )
         }

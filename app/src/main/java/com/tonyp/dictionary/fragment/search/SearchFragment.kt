@@ -25,7 +25,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             viewModel.saveSearchItem(it)
             binding.searchView.editText.clearFocus()
             WordDefinitionBottomSheetDialogFragment().show(
-                parentFragmentManager,
+                requireActivity().supportFragmentManager,
                 WordDefinitionBottomSheetDialogFragment::class.simpleName)
         }
     )
@@ -97,10 +97,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     R.id.action_suggest -> {
                         binding.searchView.editText.clearFocus()
                         viewModel.clearCachedSelectedItem()
-                        val fragmentToOpen = viewModel.getBottomSheetFragmentToOpen()
-                        fragmentToOpen.show(
-                            parentFragmentManager,
-                            fragmentToOpen::class.simpleName)
+                        viewModel.getBottomSheetFragmentToOpen().apply {
+                            show(
+                                this@SearchFragment.requireActivity().supportFragmentManager,
+                                this::class.simpleName
+                            )
+                        }
                         true
                     }
                     else -> false

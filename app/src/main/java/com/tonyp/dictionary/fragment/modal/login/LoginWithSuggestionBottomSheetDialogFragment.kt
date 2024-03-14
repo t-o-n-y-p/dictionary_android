@@ -10,6 +10,7 @@ import com.tonyp.dictionary.R
 import com.tonyp.dictionary.databinding.FragmentLoginBottomSheetDialogBinding
 import com.tonyp.dictionary.fragment.FragmentResultConstants
 import com.tonyp.dictionary.fragment.dismissWithToast
+import com.tonyp.dictionary.fragment.setFragmentResult
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,6 +52,14 @@ class LoginWithSuggestionBottomSheetDialogFragment :
                             dismissWithToast(R.string.your_proposition_has_been_submitted)
                         FragmentResultConstants.UNEXPECTED_ERROR ->
                             dismissWithToast(R.string.an_unexpected_error_occurred)
+                        FragmentResultConstants.LOGGED_OUT -> {
+                            dismiss()
+                            setFragmentResult(
+                                FragmentResultConstants.LOGIN_WITH_SUGGESTION_BOTTOM_SHEET_DIALOG_FRAGMENT,
+                                FragmentResultConstants.LOGIN_STATUS,
+                                FragmentResultConstants.LOGGED_OUT
+                            )
+                        }
                     }
                 }
             }

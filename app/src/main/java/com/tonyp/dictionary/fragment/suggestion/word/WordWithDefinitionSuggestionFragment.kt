@@ -61,6 +61,13 @@ class WordWithDefinitionSuggestionFragment : Fragment(R.layout.fragment_word_wit
                         FragmentResultConstants.UNEXPECTED_ERROR
                     )
                 }
+                WordWithDefinitionSuggestionFragmentViewModel.SubmitState.LoggedOut -> {
+                    setFragmentResult(
+                        FragmentResultConstants.WORD_WITH_DEFINITION_SUGGESTION_FRAGMENT,
+                        FragmentResultConstants.SUGGESTION_STATUS,
+                        FragmentResultConstants.LOGGED_OUT
+                    )
+                }
             }
         }
         binding.alertWordTextInput.addTextChangedListener {

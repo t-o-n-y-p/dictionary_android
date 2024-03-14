@@ -12,9 +12,7 @@ import com.tonyp.dictionary.api.v1.models.ResponseResult
 import com.tonyp.dictionary.databinding.FragmentWordDefinitionIncomingBinding
 import com.tonyp.dictionary.fragment.ServerErrorConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 
@@ -33,14 +31,12 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
             idlingResource.ifPresent { it.increment() }
             try {
                 mProcessingState.value = ProcessingState.Loading
-                withContext(Dispatchers.IO) {
-                    useCase.update(
-                        id = cache.currentlySelectedIncomingItem.id,
-                        version = cache.currentlySelectedIncomingItem.version
-                    )
-                }
-                    .getOrNull()
-                    ?.let { response ->
+                useCase.update(
+                    id = cache.currentlySelectedIncomingItem.id,
+                    version = cache.currentlySelectedIncomingItem.version
+                )
+                    .getOrThrow()
+                    .let { response ->
                         mProcessingState.value =
                             when (response.result) {
                                 null -> ProcessingState.Error
@@ -48,8 +44,9 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                                 ResponseResult.ERROR -> getProcessingStateFromErrors(response)
                             }
                     }
-                    ?: let { mProcessingState.value = ProcessingState.Error }
-            } catch (t: Throwable) {
+            } catch (_: SecurityException) {
+                mProcessingState.value = ProcessingState.LoggedOut
+            } catch (_: Throwable) {
                 mProcessingState.value = ProcessingState.Error
             } finally {
                 idlingResource.ifPresent { it.decrement() }
@@ -61,14 +58,12 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
             idlingResource.ifPresent { it.increment() }
             try {
                 mProcessingState.value = ProcessingState.Loading
-                withContext(Dispatchers.IO) {
-                    useCase.delete(
-                        id = cache.currentlySelectedIncomingItem.id,
-                        version = cache.currentlySelectedIncomingItem.version
-                    )
-                }
-                    .getOrNull()
-                    ?.let { response ->
+                useCase.delete(
+                    id = cache.currentlySelectedIncomingItem.id,
+                    version = cache.currentlySelectedIncomingItem.version
+                )
+                    .getOrThrow()
+                    .let { response ->
                         mProcessingState.value =
                             when (response.result) {
                                 null -> ProcessingState.Error
@@ -76,8 +71,9 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
                                 ResponseResult.ERROR -> getProcessingStateFromErrors(response)
                             }
                     }
-                    ?: let { mProcessingState.value = ProcessingState.Error }
-            } catch (t: Throwable) {
+            } catch (_: SecurityException) {
+                mProcessingState.value = ProcessingState.LoggedOut
+            } catch (_: Throwable) {
                 mProcessingState.value = ProcessingState.Error
             } finally {
                 idlingResource.ifPresent { it.decrement() }
@@ -112,6 +108,8 @@ class IncomingSuggestionBottomSheetDialogFragmentViewModel @Inject constructor(
         data object AlreadyApproved: ProcessingState()
 
         data object AlreadyDeclined: ProcessingState()
+
+        data object LoggedOut : ProcessingState()
 
         data object Error : ProcessingState()
     }

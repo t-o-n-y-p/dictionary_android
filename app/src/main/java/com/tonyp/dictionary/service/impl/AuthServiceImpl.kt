@@ -54,7 +54,7 @@ interface AuthServiceImpl : AuthService {
 
             val retrofit = Retrofit.Builder()
                 .client(okHttp)
-                .baseUrl("http://192.168.56.1:8081/auth/realms/dictionary-meanings/protocol/openid-connect/")
+                .baseUrl("http://192.168.0.103:8081/auth/realms/dictionary-meanings/protocol/openid-connect/")
                 .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
                 .build()
 

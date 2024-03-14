@@ -14,9 +14,7 @@ import com.tonyp.dictionary.service.dto.auth.UserGroup
 import com.tonyp.dictionary.storage.mappers.UserPreferencesMapper
 import com.tonyp.dictionary.storage.put
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 
@@ -36,14 +34,12 @@ class LoginFragmentViewModel @Inject constructor(
             idlingResource.ifPresent { it.increment() }
             try {
                 mLoginState.value = LoginState.Loading
-                val tokenResponse =
-                    withContext(Dispatchers.IO) { useCase.login(username, password) }
-                        .getOrThrow()
+                val tokenResponse = useCase.login(username, password).getOrThrow()
                 securePreferences.put(
                     UserPreferencesMapper.map(tokenResponse)
                 )
                 val userInfoResponse =
-                    withContext(Dispatchers.IO) { useCase.getUserInfo() }
+                    useCase.getUserInfo()
                         .getOrThrow()
                         .takeUnless { it.groups?.contains(UserGroup.BANNED) ?: true }
                         ?: let {

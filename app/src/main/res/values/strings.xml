@@ -46,4 +46,7 @@
     <string name="this_record_already_exists">This record already exists.</string>
     <string name="ok">OK</string>
     <string name="refresh">Refresh</string>
+    <string name="logged_out">Logged out</string>
+    <string name="you_must_log_in_again">For security reasons, you must log in again to your account.</string>
+    <string name="later">Later</string>
 </resources>

@@ -14,10 +14,8 @@ import com.tonyp.dictionary.databinding.FragmentIncomingBinding
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionAdapter
 import com.tonyp.dictionary.recyclerview.definition.WordsWithDefinitionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 import kotlin.math.min
@@ -61,9 +59,9 @@ class IncomingFragmentViewModel @Inject constructor(
         refreshDataTask = viewModelScope.launch {
             idlingResource.ifPresent { it.increment() }
             try {
-                withContext(Dispatchers.IO) { useCase.search() }
-                    .getOrNull()
-                    ?.takeIf { it.result == ResponseResult.SUCCESS }
+                useCase.search()
+                    .getOrThrow()
+                    .takeIf { it.result == ResponseResult.SUCCESS }
                     ?.let { response ->
                         val items = response.meanings.orEmpty().map {
                             WordsWithDefinitionItem(
@@ -84,7 +82,7 @@ class IncomingFragmentViewModel @Inject constructor(
                     ?: let {
                         mSearchResultState.value = SearchResultState.Error
                     }
-            } catch (t: Throwable) {
+            } catch (_: Throwable) {
                 mSearchResultState.value = SearchResultState.Error
             } finally {
                 idlingResource.ifPresent { it.decrement() }

@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.FragmentTransaction
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.tonyp.dictionary.databinding.ActivityMainBinding
+import com.tonyp.dictionary.fragment.FragmentResultConstants
 import com.tonyp.dictionary.fragment.incoming.IncomingFragment
 import com.tonyp.dictionary.fragment.profile.ProfileFragment
 import com.tonyp.dictionary.fragment.recent.RecentFragment
 import com.tonyp.dictionary.fragment.search.SearchFragment
+import com.tonyp.dictionary.fragment.showLogInAlert
 import com.tonyp.dictionary.storage.get
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.models.UserRole
@@ -26,11 +29,29 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var cache: WizardCache
 
     private lateinit var menu: Menu
+    private lateinit var binding: ActivityMainBinding
+
+    private val fragmentResultListener =
+        FragmentResultListener { fragmentKey, bundle ->
+            bundle.getString(FragmentResultConstants.LOGIN_STATUS)
+                .takeIf { it == FragmentResultConstants.LOGGED_OUT }
+                ?.let {
+                    when (fragmentKey) {
+                        FragmentResultConstants.INCOMING_SUGGESTION_BOTTOM_SHEET_DIALOG_FRAGMENT -> {
+                            menu.performIdentifierAction(R.id.search, 0)
+                            binding.bottomNavigation.selectedItemId = R.id.search
+                            showLogInAlert()
+                        }
+                        else -> showLogInAlert()
+                    }
+                }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        findViewById<BottomNavigationView>(R.id.bottom_navigation).apply {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.bottomNavigation.apply {
             this@MainActivity.menu = menu
             setOnItemSelectedListener {
                 when (it.itemId) {
@@ -52,6 +73,13 @@ class MainActivity : AppCompatActivity() {
                     .adjustMenu()
             }
         }
+        FragmentResultConstants.POSTING_DATA_FRAGMENTS.forEach { fragmentKey ->
+            supportFragmentManager.setFragmentResultListener(
+                fragmentKey,
+                this@MainActivity,
+                fragmentResultListener
+            )
+        }
         switchToFragment(cache.currentFragment)
     }
 
@@ -65,13 +93,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun UserPreferences?.adjustMenu() =
-        takeIf { it?.roles?.contains(UserRole.ADMIN) ?: false }
-            ?.let { menu.findItem(R.id.incoming).isVisible = true }
-            ?: let {
-                menu.findItem(R.id.incoming).isVisible = false
-                cache.currentFragment
-                    .takeIf { it == IncomingFragment::class }
-                    ?.let { menu.performIdentifierAction(R.id.search, 0) }
-            }
+    private fun UserPreferences?.adjustMenu() {
+        menu.findItem(R.id.incoming).isVisible = this?.roles?.contains(UserRole.ADMIN) ?: false
+    }
 }
