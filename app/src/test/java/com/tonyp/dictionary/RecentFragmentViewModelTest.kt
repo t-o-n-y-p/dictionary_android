@@ -64,8 +64,8 @@ class RecentFragmentViewModelTest {
         verify(exactly = 1) {
             adapter.submitList(
                 listOf(
-                    WordsItem(value = "трава"),
-                    WordsItem(value = "обвал")
+                    WordsItem(value = "обвал"),
+                    WordsItem(value = "трава")
                 )
             )
         }

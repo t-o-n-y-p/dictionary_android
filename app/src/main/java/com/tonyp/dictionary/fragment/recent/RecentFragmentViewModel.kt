@@ -29,7 +29,7 @@ class RecentFragmentViewModel @Inject constructor(
             ?.takeIf { it.isNotEmpty() }
             ?.map { WordsItem(value = it) }
             ?.let {
-                adapter.submitList(it)
+                adapter.submitList(it.asReversed())
                 mRecentResultState.value = RecentResultState.Content
             }
             ?: let {
