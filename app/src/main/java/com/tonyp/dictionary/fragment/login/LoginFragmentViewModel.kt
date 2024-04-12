@@ -23,6 +23,7 @@ class LoginFragmentViewModel @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
     private val useCase: LoginFragmentUseCase,
     private val cache: WizardCache,
+    private val mapper: UserPreferencesMapper,
     @OptionalIdlingResource private val idlingResource: Optional<CountingIdlingResource>
 ) : ViewModel() {
 
@@ -35,9 +36,7 @@ class LoginFragmentViewModel @Inject constructor(
             try {
                 mLoginState.value = LoginState.Loading
                 val tokenResponse = useCase.login(username, password).getOrThrow()
-                securePreferences.put(
-                    UserPreferencesMapper.map(tokenResponse)
-                )
+                securePreferences.put(mapper.map(tokenResponse))
                 val userInfoResponse =
                     useCase.getUserInfo()
                         .getOrThrow()
@@ -46,9 +45,7 @@ class LoginFragmentViewModel @Inject constructor(
                             mLoginState.value = LoginState.UserIsBanned
                             return@launch
                         }
-                securePreferences.put(
-                    UserPreferencesMapper.map(tokenResponse, userInfoResponse)
-                )
+                securePreferences.put(mapper.map(tokenResponse, userInfoResponse))
                 mLoginState.value = LoginState.Success
             } catch (_: SecurityException) {
                 mLoginState.value = LoginState.InvalidCredentials

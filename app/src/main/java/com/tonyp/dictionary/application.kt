@@ -71,17 +71,13 @@ class Module {
 }
 
 @Qualifier
-@Retention(AnnotationRetention.RUNTIME)
 annotation class MasterKey
 
 @Qualifier
-@Retention(AnnotationRetention.RUNTIME)
 annotation class SecurePreferences
 
 @Qualifier
-@Retention(AnnotationRetention.RUNTIME)
 annotation class CommonPreferences
 
 @Qualifier
-@Retention(AnnotationRetention.RUNTIME)
 annotation class OptionalIdlingResource

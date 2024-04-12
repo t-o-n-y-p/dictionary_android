@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserInfoResponse(
     @SerialName("preferred_username")
-    val preferredUsername: String?,
-    val groups: List<UserGroup>?
+    val preferredUsername: String? = null,
+    val groups: List<UserGroup>? = null
 )

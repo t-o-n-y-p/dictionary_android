@@ -13,6 +13,10 @@ import com.tonyp.dictionary.fragment.dismissWithToast
 import com.tonyp.dictionary.fragment.setFragmentResult
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Отпишусь тут но касается всех фрагментов, я бы на твоем месте по максимуму всю логику из фрагмента убирал,
+ * во вью + какой то процессор одноразовых эевентов
+ */
 @AndroidEntryPoint
 class WordSuggestionBottomSheetDialogFragment :
     BottomSheetDialogFragment(R.layout.fragment_word_suggestion_bottom_sheet_dialog) {

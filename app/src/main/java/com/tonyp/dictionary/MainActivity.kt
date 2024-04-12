@@ -1,8 +1,7 @@
 package com.tonyp.dictionary
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
@@ -14,22 +13,15 @@ import com.tonyp.dictionary.fragment.profile.ProfileFragment
 import com.tonyp.dictionary.fragment.recent.RecentFragment
 import com.tonyp.dictionary.fragment.search.SearchFragment
 import com.tonyp.dictionary.fragment.showLogInAlert
-import com.tonyp.dictionary.storage.get
-import com.tonyp.dictionary.storage.models.UserPreferences
-import com.tonyp.dictionary.storage.models.UserRole
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject @SecurePreferences lateinit var securePreferences: SharedPreferences
-    @Inject lateinit var cache: WizardCache
-
-    private lateinit var menu: Menu
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainActivityViewModel by viewModels()
 
     private val fragmentResultListener =
         FragmentResultListener { fragmentKey, bundle ->
@@ -37,11 +29,12 @@ class MainActivity : AppCompatActivity() {
                 .takeIf { it == FragmentResultConstants.LOGGED_OUT }
                 ?.let {
                     when (fragmentKey) {
-                        FragmentResultConstants.INCOMING_SUGGESTION_BOTTOM_SHEET_DIALOG_FRAGMENT -> {
-                            menu.performIdentifierAction(R.id.search, 0)
-                            binding.bottomNavigation.selectedItemId = R.id.search
-                            showLogInAlert()
-                        }
+                        FragmentResultConstants.INCOMING_SUGGESTION_BOTTOM_SHEET_DIALOG_FRAGMENT ->
+                            binding.bottomNavigation.apply {
+                                menu.performIdentifierAction(R.id.search, 0)
+                                selectedItemId = R.id.search
+                                showLogInAlert()
+                            }
                         else -> showLogInAlert()
                     }
                 }
@@ -51,8 +44,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel.initSecurePreferencesListener(binding)
+        FragmentResultConstants.POSTING_DATA_FRAGMENTS.forEach { fragmentKey ->
+            supportFragmentManager.setFragmentResultListener(
+                fragmentKey,
+                this@MainActivity,
+                fragmentResultListener
+            )
+        }
+        switchToFragment(viewModel.getCurrentFragment())
         binding.bottomNavigation.apply {
-            this@MainActivity.menu = menu
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.search -> switchToFragment(SearchFragment::class)
@@ -64,36 +65,15 @@ class MainActivity : AppCompatActivity() {
             }
             setOnItemReselectedListener {}
         }
-        securePreferences.apply {
-            get<UserPreferences>()?.adjustMenu()
-            registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
-                key
-                    .takeIf { it == UserPreferences::class.simpleName }
-                    ?.let { sharedPreferences.get<UserPreferences>() }
-                    .adjustMenu()
-            }
-        }
-        FragmentResultConstants.POSTING_DATA_FRAGMENTS.forEach { fragmentKey ->
-            supportFragmentManager.setFragmentResultListener(
-                fragmentKey,
-                this@MainActivity,
-                fragmentResultListener
-            )
-        }
-        switchToFragment(cache.currentFragment)
     }
 
     private fun switchToFragment(kClass: KClass<out Fragment>): Boolean {
-        cache.currentFragment = kClass
+        viewModel.saveFragmentToCache(kClass)
         supportFragmentManager.beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .setCustomAnimations(R.anim.slide_up, R.anim.no_animation)
             .replace(R.id.fragment_container, kClass.createInstance())
             .commit()
         return true
-    }
-
-    private fun UserPreferences?.adjustMenu() {
-        menu.findItem(R.id.incoming).isVisible = this?.roles?.contains(UserRole.ADMIN) ?: false
     }
 }

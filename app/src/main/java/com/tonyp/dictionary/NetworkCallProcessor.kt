@@ -20,9 +20,14 @@ import javax.inject.Inject
 class NetworkCallProcessor @Inject constructor(
     @SecurePreferences private val securePreferences: SharedPreferences,
     private val dictionaryService: DictionaryService,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val mapper: UserPreferencesMapper
 ) {
 
+    /**
+     * кажется что это можно перенести например в интерсептор, тогда не придется запросы
+     * сетевые как то по особенному через эту функцию отправлять
+     */
     suspend fun <T> dictionaryService(
         retries: Int = 1,
         block: suspend DictionaryService.() -> Response<T>
@@ -37,12 +42,12 @@ class NetworkCallProcessor @Inject constructor(
                     }
                         .getOrNull()
                         ?: throwSecurityException()
-                    securePreferences.put(UserPreferencesMapper.map(tokenResponse))
+                    securePreferences.put(mapper.map(tokenResponse))
                     val userInfoResponse = authService { getUserInfo() }
                         .getOrNull()
                         ?.takeUnless { it.groups?.contains(UserGroup.BANNED) ?: true }
                         ?: throwSecurityException()
-                    securePreferences.put(UserPreferencesMapper.map(tokenResponse, userInfoResponse))
+                    securePreferences.put(mapper.map(tokenResponse, userInfoResponse))
                     dictionaryService(retries - 1) { block() }
                         .getOrNull()
                         ?: throw IOException()

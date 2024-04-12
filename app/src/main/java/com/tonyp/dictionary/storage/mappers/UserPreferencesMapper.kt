@@ -5,29 +5,22 @@ import com.tonyp.dictionary.service.dto.auth.UserGroup
 import com.tonyp.dictionary.service.dto.auth.UserInfoResponse
 import com.tonyp.dictionary.storage.models.UserPreferences
 import com.tonyp.dictionary.storage.models.UserRole
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 
-object UserPreferencesMapper {
-
-    fun map(
-        tokenResponse: TokenResponse
-    ): UserPreferences {
-        return UserPreferences(
-            accessToken = tokenResponse.accessToken.orEmpty(),
-            refreshToken = tokenResponse.refreshToken.orEmpty()
-        )
-    }
+@ActivityRetainedScoped
+class UserPreferencesMapper @Inject constructor() {
 
     fun map(
         tokenResponse: TokenResponse,
-        userInfoResponse: UserInfoResponse
-    ): UserPreferences {
-        return UserPreferences(
+        userInfoResponse: UserInfoResponse = UserInfoResponse()
+    ) =
+        UserPreferences(
             accessToken = tokenResponse.accessToken.orEmpty(),
             refreshToken = tokenResponse.refreshToken.orEmpty(),
             username = userInfoResponse.preferredUsername.orEmpty(),
             roles = map(userInfoResponse.groups.orEmpty())
         )
-    }
 
     private fun map(groups: List<UserGroup>): List<UserRole> =
         groups.map {
